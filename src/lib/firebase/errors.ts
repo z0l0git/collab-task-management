@@ -24,6 +24,10 @@ const MESSAGES: Record<string, string> = {
   "auth/network-request-failed":
     "Can't reach the server. Check your connection and try again.",
   "auth/requires-recent-login": "Please sign in again to continue.",
+  "auth/operation-not-allowed":
+    "That sign-in method isn't enabled for this project yet.",
+  "auth/internal-error":
+    "Sign-in failed to complete. If you're running locally, check the Firebase emulators are running.",
   "auth/unauthorized-domain":
     "This domain isn't authorised for sign-in. Check the Firebase console.",
 
