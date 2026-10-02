@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "demo-collab-task"
-  }
+    "default": "demo-collab-task",
+    "prod": "collab-task-management"
+  },
+  "targets": {},
+  "etags": {}
 }
