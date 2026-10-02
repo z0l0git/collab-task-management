@@ -18,23 +18,17 @@ const ENV_VAR_NAMES: Record<keyof typeof rawConfig, string> = {
   appId: "NEXT_PUBLIC_FIREBASE_APP_ID",
 };
 
-function assertCompleteConfig(
-  config: typeof rawConfig,
-): asserts config is FirebaseOptions & Record<keyof typeof rawConfig, string> {
-  const missing = (
-    Object.keys(ENV_VAR_NAMES) as Array<keyof typeof rawConfig>
-  ).filter((key) => !config[key]);
+const missingKeys = (
+  Object.keys(ENV_VAR_NAMES) as Array<keyof typeof rawConfig>
+).filter((key) => !rawConfig[key]);
 
-  if (missing.length > 0) {
-    const names = missing.map((key) => ENV_VAR_NAMES[key]).join(", ");
-    throw new Error(
-      `Missing Firebase environment variables: ${names}. ` +
-        `Copy .env.example to .env.local and fill them in.`,
-    );
-  }
+if (missingKeys.length > 0) {
+  const names = missingKeys.map((key) => ENV_VAR_NAMES[key]).join(", ");
+  throw new Error(
+    `Missing Firebase environment variables: ${names}. ` +
+      `Copy .env.example to .env.local and fill them in.`,
+  );
 }
-
-assertCompleteConfig(rawConfig);
 
 export const firebaseConfig: FirebaseOptions = rawConfig;
 

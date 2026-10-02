@@ -30,7 +30,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   trailingIcon?: ReactNode;
 };
 
-export function Button({
+export const Button = ({
   variant = "primary",
   size = "md",
   isLoading = false,
@@ -42,7 +42,7 @@ export function Button({
   children,
   type = "button",
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   return (
     <button
       type={type}
@@ -64,4 +64,4 @@ export function Button({
       {!isLoading && trailingIcon}
     </button>
   );
-}
+};

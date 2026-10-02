@@ -10,11 +10,11 @@ export type FieldProps = {
   className?: string;
 };
 
-export function fieldIds(id: string) {
+export const fieldIds = (id: string) => {
   return { hintId: `${id}-hint`, errorId: `${id}-error` };
-}
+};
 
-export function Field({
+export const Field = ({
   id,
   label,
   hint,
@@ -22,7 +22,7 @@ export function Field({
   required,
   className,
   children,
-}: FieldProps & { id: string; children: ReactNode }) {
+}: FieldProps & { id: string; children: ReactNode }) => {
   const { hintId, errorId } = fieldIds(id);
 
   return (
@@ -52,7 +52,7 @@ export function Field({
       ) : null}
     </div>
   );
-}
+};
 
 export const controlClasses = (hasError: boolean) =>
   cn(

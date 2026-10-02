@@ -98,7 +98,7 @@ src/
   components/
     ui/             Design system (Button, Input, Modal, Card, Badge, ...)
     layout/         App shell, navigation
-    theme/          Dark mode store, provider and toggle
+    theme/          Pre-paint theme script and the dark mode toggle
   features/         One folder per domain: auth, workspaces, tasks, board,
                     comments, attachments, dashboard — each with its own
                     components, hooks, services and types

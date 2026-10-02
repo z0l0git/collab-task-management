@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { ThemeProvider, themeScript } from "@/components/theme";
+import { themeScript } from "@/components/theme/themeScript";
 
 import "./globals.css";
 
@@ -31,7 +31,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+const RootLayout = ({ children }: LayoutProps<"/">) => {
   return (
     <html
       lang="en"
@@ -41,9 +41,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-full flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
-}
+};
+
+export default RootLayout;

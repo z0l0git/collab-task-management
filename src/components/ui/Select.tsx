@@ -22,7 +22,7 @@ export type SelectProps<T extends string = string> = Omit<
     placeholder?: string;
   };
 
-export function Select<T extends string = string>({
+export const Select = <T extends string = string>({
   label,
   hint,
   error,
@@ -32,7 +32,7 @@ export function Select<T extends string = string>({
   options,
   placeholder,
   ...props
-}: SelectProps<T>) {
+}: SelectProps<T>) => {
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const { hintId, errorId } = fieldIds(selectId);
@@ -80,4 +80,4 @@ export function Select<T extends string = string>({
       </div>
     </Field>
   );
-}
+};

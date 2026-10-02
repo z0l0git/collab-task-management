@@ -27,13 +27,13 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
   withDot?: boolean;
 };
 
-export function Badge({
+export const Badge = ({
   variant = "neutral",
   withDot = false,
   className,
   children,
   ...props
-}: BadgeProps) {
+}: BadgeProps) => {
   return (
     <span
       className={cn(
@@ -50,4 +50,4 @@ export function Badge({
       {children}
     </span>
   );
-}
+};
