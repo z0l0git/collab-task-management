@@ -4,9 +4,9 @@ A collaborative task management application: shared workspaces, a real-time
 Kanban board, task comments and file attachments, built with Next.js and
 Firebase.
 
-> **Status: Sprint 0 (foundation).** The toolchain, design system, Firebase
-> wiring and emulator setup are in place. Authentication, workspaces and tasks
-> land in the sprints that follow, and this README grows with them.
+> **Status: Sprint 1 (authentication).** The toolchain, design system, Firebase
+> wiring, emulators and authentication are in place. Workspaces and tasks land
+> in the sprints that follow, and this README grows with them.
 
 ## Stack
 
@@ -86,6 +86,7 @@ ships them to the browser by design. What protects the data is
 | `npm run typecheck`        | Generate route types, then `tsc --noEmit`             |
 | `npm run format`           | Prettier write                                        |
 | `npm run format:check`     | Prettier check (runs in CI)                           |
+| `npm run test:rules`       | Security-rules checks (emulators must be running)     |
 | `npm run emulators`        | Auth, Firestore and Storage emulators                 |
 | `npm run emulators:export` | Save current emulator data to `.emulator-data`        |
 | `npm run emulators:import` | Start emulators from `.emulator-data`, saving on exit |
@@ -144,12 +145,55 @@ text-body-sm (14px base)  text-body (prose)  text-headline  text-caption
 rounded-md (8px, controls)  rounded-lg (12px, cards)  rounded-full
 ```
 
+## Authentication
+
+Email/password and Google sign-in, via Firebase Auth. On every sign-in the app
+writes a `users/{uid}` profile document holding `displayName`, `email`,
+`emailLower` (for member lookup by email), `photoURL` and timestamps.
+
+Session persistence is the Firebase browser default (`indexedDBLocal`), so a
+signed-in user survives reloads and restarts without any extra code.
+
+Route protection is client-side: `AuthProvider` subscribes to
+`onAuthStateChanged`, the `(app)` layout redirects signed-out users to `/login`,
+and the `(auth)` layout redirects signed-in users to `/workspaces`. Both render
+a spinner while the session is still resolving, so neither flashes the wrong
+screen. **This guard is for UX only** — the real protection is the security
+rules, which refuse to serve the data regardless of what the UI renders.
+
 ## Security
 
 Permissions are enforced in `firestore.rules` and `storage.rules`; the UI only
-checks permissions to decide what to show. Both rule files currently deny all
-access, and each collection is opened up — with tests — as the feature that
-needs it lands.
+checks permissions to decide what to show. Everything is denied by default, and
+each collection is opened up — with checks — as the feature that needs it lands.
+
+`npm run test:rules` drives the running emulators over their REST APIs with real
+ID tokens and asserts the status codes, so the rules are verified rather than
+assumed. It needs no test runner and no extra dependencies:
+
+```
+10 checks, 0 failing   # anonymous denied, member reads allowed,
+                       # cross-user writes denied, deletes denied
+```
+
+## Deployment
+
+`main` is the production branch. Vercel builds it on every merge, and GitHub
+Actions gates the merge.
+
+**Vercel environment variables.** The build deliberately throws when a
+`NEXT_PUBLIC_FIREBASE_*` variable is missing, so set all six — plus
+`NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false` — before the first deploy.
+
+**Firebase setup for the deployed app.**
+
+1. Authentication → Sign-in method → enable **Email/Password** and **Google**.
+2. Authentication → Settings → **Authorized domains** → add the production
+   domain. `localhost` is already there.
+3. Deploy the rules: `npx firebase deploy --only firestore:rules,storage:rules`.
+
+`NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` must be the real `<project>.firebaseapp.com`
+— `signInWithPopup` serves its OAuth handler from that domain.
 
 ## Roadmap
 

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { themeScript } from "@/components/theme/themeScript";
+import { AuthProvider } from "@/features/auth/AuthProvider";
 
 import "./globals.css";
 
@@ -41,7 +42,9 @@ const RootLayout = ({ children }: LayoutProps<"/">) => {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 };
