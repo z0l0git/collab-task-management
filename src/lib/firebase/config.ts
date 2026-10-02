@@ -26,7 +26,10 @@ if (missingKeys.length > 0) {
   const names = missingKeys.map((key) => ENV_VAR_NAMES[key]).join(", ");
   throw new Error(
     `Missing Firebase environment variables: ${names}. ` +
-      `Copy .env.example to .env.local and fill them in.`,
+      `Locally, copy .env.example to .env.local and fill them in. ` +
+      `When deploying, set them in the host's environment settings for the ` +
+      `environment being built, then trigger a new deployment — changing them ` +
+      `does not rebuild on its own.`,
   );
 }
 

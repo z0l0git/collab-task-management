@@ -13,25 +13,47 @@ import {
 
 import { emulatorConfig, firebaseConfig } from "./config";
 
-const app: FirebaseApp = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+let app: FirebaseApp | null = null;
+let authInstance: Auth | null = null;
+let dbInstance: Firestore | null = null;
+let storageInstance: FirebaseStorage | null = null;
 
-const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
-const storage: FirebaseStorage = getStorage(app);
+const getFirebaseApp = () => {
+  app ??= getApps().length ? getApp() : initializeApp(firebaseConfig);
+  return app;
+};
 
-let emulatorsConnected = false;
+export const getFirebaseAuth = () => {
+  if (!authInstance) {
+    authInstance = getAuth(getFirebaseApp());
+    if (emulatorConfig.enabled) {
+      const { host, authPort } = emulatorConfig;
+      connectAuthEmulator(authInstance, `http://${host}:${authPort}`, {
+        disableWarnings: true,
+      });
+    }
+  }
+  return authInstance;
+};
 
-if (emulatorConfig.enabled && !emulatorsConnected) {
-  emulatorsConnected = true;
-  const { host, authPort, firestorePort, storagePort } = emulatorConfig;
+export const getFirebaseDb = () => {
+  if (!dbInstance) {
+    dbInstance = getFirestore(getFirebaseApp());
+    if (emulatorConfig.enabled) {
+      const { host, firestorePort } = emulatorConfig;
+      connectFirestoreEmulator(dbInstance, host, firestorePort);
+    }
+  }
+  return dbInstance;
+};
 
-  connectAuthEmulator(auth, `http://${host}:${authPort}`, {
-    disableWarnings: true,
-  });
-  connectFirestoreEmulator(db, host, firestorePort);
-  connectStorageEmulator(storage, host, storagePort);
-}
-
-export { app, auth, db, storage };
+export const getFirebaseStorage = () => {
+  if (!storageInstance) {
+    storageInstance = getStorage(getFirebaseApp());
+    if (emulatorConfig.enabled) {
+      const { host, storagePort } = emulatorConfig;
+      connectStorageEmulator(storageInstance, host, storagePort);
+    }
+  }
+  return storageInstance;
+};

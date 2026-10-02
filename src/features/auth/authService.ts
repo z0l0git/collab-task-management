@@ -15,9 +15,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { auth, db } from "@/lib/firebase";
+import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 
-const userRef = (uid: string) => doc(db, "users", uid);
+const userRef = (uid: string) => doc(getFirebaseDb(), "users", uid);
 
 const fallbackName = (user: User) =>
   user.displayName?.trim() || user.email?.split("@")[0] || "Member";
@@ -47,19 +47,30 @@ export const signUpWithEmail = async (
   email: string,
   password: string,
 ) => {
-  const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  const { user } = await createUserWithEmailAndPassword(
+    getFirebaseAuth(),
+    email,
+    password,
+  );
   await updateProfile(user, { displayName: displayName.trim() });
   await syncUserProfile(user, displayName);
 };
 
 export const signInWithEmail = async (email: string, password: string) => {
-  const { user } = await signInWithEmailAndPassword(auth, email, password);
+  const { user } = await signInWithEmailAndPassword(
+    getFirebaseAuth(),
+    email,
+    password,
+  );
   await syncUserProfile(user);
 };
 
 export const signInWithGoogle = async () => {
-  const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
+  const { user } = await signInWithPopup(
+    getFirebaseAuth(),
+    new GoogleAuthProvider(),
+  );
   await syncUserProfile(user);
 };
 
-export const signOut = () => firebaseSignOut(auth);
+export const signOut = () => firebaseSignOut(getFirebaseAuth());

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 
 type AuthState = {
   user: User | null;
@@ -23,7 +23,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(
     () =>
-      onAuthStateChanged(auth, (user) => setState({ user, loading: false })),
+      onAuthStateChanged(getFirebaseAuth(), (user) =>
+        setState({ user, loading: false }),
+      ),
     [],
   );
 
