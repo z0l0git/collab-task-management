@@ -34,3 +34,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# firebase
+.firebase/
+*-debug.log
+firebase-debug.*.log
+.emulator-data/
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/

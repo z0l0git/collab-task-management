@@ -1,0 +1,9 @@
+.next
+out
+build
+coverage
+node_modules
+.emulator-data
+package-lock.json
+next-env.d.ts
+*.rules
