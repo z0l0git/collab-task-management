@@ -1,49 +1,6 @@
-const PROJECT = "demo-collab-task";
-const AUTH = "http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts";
-const FS = `http://127.0.0.1:8080/v1/projects/${PROJECT}/databases/(default)/documents`;
+import { call, profile, signIn } from "./helpers.mjs";
 
-const signIn = async (email, password) => {
-  const body = { email, password, returnSecureToken: true };
-  const post = (op) =>
-    fetch(`${AUTH}:${op}?key=demo-api-key`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-  let res = await post("signUp");
-  if (!res.ok) res = await post("signInWithPassword");
-  if (!res.ok) throw new Error(`could not sign in ${email}: ${res.status}`);
-
-  const { idToken, localId } = await res.json();
-  return { idToken, uid: localId };
-};
-
-const call = async (method, path, { token, body } = {}) => {
-  const res = await fetch(`${FS}${path}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  return res.status;
-};
-
-const profile = (uid) => ({
-  fields: {
-    id: { stringValue: uid },
-    displayName: { stringValue: "Mallory" },
-    email: { stringValue: "x@example.com" },
-    emailLower: { stringValue: "x@example.com" },
-    photoURL: { nullValue: null },
-    createdAt: { timestampValue: "2026-01-01T00:00:00Z" },
-    updatedAt: { timestampValue: "2026-01-01T00:00:00Z" },
-  },
-});
-
-const run = async () => {
+export const run = async () => {
   const alice = await signIn("rules-alice@example.com", "hunter2pass");
   const bob = await signIn("rules-bob@example.com", "hunter2pass");
 
@@ -54,7 +11,7 @@ const run = async () => {
     });
   }
 
-  const cases = [
+  return [
     [
       "anonymous cannot read a profile",
       403,
@@ -122,25 +79,4 @@ const run = async () => {
       },
     ],
   ];
-
-  let failed = 0;
-  for (const [name, expected, { method, path, token, body }] of cases) {
-    const status = await call(method, path, { token, body });
-    const ok = status === expected;
-    if (!ok) failed += 1;
-    console.log(
-      `${ok ? "pass" : "FAIL"}  got ${status}, want ${expected}  ${name}`,
-    );
-  }
-
-  console.log(`\n${cases.length} checks, ${failed} failing`);
-  if (failed > 0) process.exit(1);
 };
-
-run().catch((error) => {
-  console.error(
-    "Rules checks could not run. Start the emulators: npm run emulators",
-  );
-  console.error(error.message);
-  process.exit(1);
-});

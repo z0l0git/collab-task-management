@@ -13,10 +13,9 @@
     "test:watch": "vitest",
     "format": "prettier --write \"**/*.{ts,tsx,mts,css,json,mjs,yml,yaml}\" README.md",
     "format:check": "prettier --check \"**/*.{ts,tsx,mts,css,json,mjs,yml,yaml}\" README.md",
-    "test:rules": "node tests/rules/users.mjs",
-    "emulators": "firebase emulators:start --only auth,firestore,storage",
-    "emulators:export": "firebase emulators:export ./.emulator-data --force",
-    "emulators:import": "firebase emulators:start --only auth,firestore,storage --import ./.emulator-data --export-on-exit"
+    "test:rules": "node tests/rules/index.mjs",
+    "emulators": "firebase emulators:start --project demo-collab-task --only auth,firestore,storage $([ -d ./.emulator-data ] && echo --import ./.emulator-data) --export-on-exit ./.emulator-data",
+    "emulators:export": "firebase emulators:export ./.emulator-data --project demo-collab-task --force"
   },
   "dependencies": {
     "clsx": "^2.1.1",

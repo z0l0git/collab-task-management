@@ -35,6 +35,66 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /workspaces/{workspaceId} {
+
+      function isMember() {
+        return isSignedIn() && request.auth.uid in resource.data.memberIds;
+      }
+
+      function isWorkspaceOwner() {
+        return isSignedIn() && request.auth.uid == resource.data.ownerId;
+      }
+
+      function validWorkspace(data) {
+        return data.name is string
+          && data.name.size() > 0
+          && data.name.size() <= 80
+          && data.description is string
+          && data.description.size() <= 500
+          && data.ownerId is string
+          && data.memberIds is list
+          && data.memberIds.size() > 0
+          && data.memberIds.size() <= 50
+          && data.members is map
+          && data.labels is list
+          && data.labels.size() <= 50
+          && data.ownerId in data.memberIds;
+      }
+
+      function ownerUnchanged() {
+        return request.resource.data.ownerId == resource.data.ownerId
+          && request.resource.data.createdAt == resource.data.createdAt;
+      }
+
+      function isLeaving() {
+        return isMember()
+          && request.auth.uid != resource.data.ownerId
+          && !(request.auth.uid in request.resource.data.memberIds)
+          && request.resource.data.memberIds.size() ==
+             resource.data.memberIds.size() - 1
+          && request.resource.data.name == resource.data.name
+          && request.resource.data.description == resource.data.description;
+      }
+
+      allow read: if isMember();
+
+      allow create: if isSignedIn()
+        && validWorkspace(request.resource.data)
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.memberIds == [request.auth.uid]
+        && request.resource.data.members[request.auth.uid].role == 'owner'
+        && request.resource.data.labels == []
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if validWorkspace(request.resource.data)
+        && ownerUnchanged()
+        && request.resource.data.updatedAt == request.time
+        && (isWorkspaceOwner() || isLeaving());
+
+      allow delete: if isWorkspaceOwner();
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

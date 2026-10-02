@@ -15,6 +15,10 @@ const eslintConfig = defineConfig([
       "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },
+  {
+    files: ["tests/**/*.mjs"],
+    rules: { "no-console": "off" },
+  },
   globalIgnores([
     ".next/**",
     "out/**",
