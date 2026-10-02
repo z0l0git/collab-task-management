@@ -12,13 +12,13 @@ export type EmptyStateProps = {
   className?: string;
 };
 
-export function EmptyState({
+export const EmptyState = ({
   icon: Icon = Inbox,
   title,
   description,
   action,
   className,
-}: EmptyStateProps) {
+}: EmptyStateProps) => {
   return (
     <div
       className={cn(
@@ -41,4 +41,4 @@ export function EmptyState({
       {action ? <div className="mt-1">{action}</div> : null}
     </div>
   );
-}
+};

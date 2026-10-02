@@ -12,11 +12,11 @@ export type SpinnerProps = {
   label?: string | null;
 };
 
-export function Spinner({
+export const Spinner = ({
   size = "md",
   className,
   label = "Loading",
-}: SpinnerProps) {
+}: SpinnerProps) => {
   return (
     <span
       role={label ? "status" : undefined}
@@ -32,4 +32,4 @@ export function Spinner({
       {label ? <span className="sr-only">{label}</span> : null}
     </span>
   );
-}
+};

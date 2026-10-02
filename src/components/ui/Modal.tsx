@@ -21,7 +21,7 @@ export type ModalProps = {
   children?: ReactNode;
 };
 
-export function Modal({
+export const Modal = ({
   open,
   onClose,
   title,
@@ -29,7 +29,7 @@ export function Modal({
   size = "md",
   footer,
   children,
-}: ModalProps) {
+}: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const descriptionId = useId();
@@ -102,4 +102,4 @@ export function Modal({
       ) : null}
     </dialog>
   );
-}
+};

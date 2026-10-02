@@ -49,25 +49,25 @@ const MESSAGES: Record<string, string> = {
   "storage/unauthenticated": "Please sign in to upload files.",
 };
 
-export function isFirebaseError(error: unknown): error is FirebaseError {
+export const isFirebaseError = (error: unknown): error is FirebaseError => {
   return error instanceof FirebaseError;
-}
+};
 
-export function isPermissionDenied(error: unknown): boolean {
+export const isPermissionDenied = (error: unknown): boolean => {
   return (
     isFirebaseError(error) &&
     (error.code === "permission-denied" ||
       error.code === "storage/unauthorized")
   );
-}
+};
 
-export function toUserMessage(
+export const toUserMessage = (
   error: unknown,
   fallback = FALLBACK_MESSAGE,
-): string {
+): string => {
   if (isFirebaseError(error)) {
     return MESSAGES[error.code] ?? fallback;
   }
 
   return fallback;
-}
+};

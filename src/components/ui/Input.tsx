@@ -9,7 +9,7 @@ import { controlClasses, Field, fieldIds, type FieldProps } from "./Field";
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
   FieldProps;
 
-export function Input({
+export const Input = ({
   label,
   hint,
   error,
@@ -17,7 +17,7 @@ export function Input({
   className,
   id,
   ...props
-}: InputProps) {
+}: InputProps) => {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const { hintId, errorId } = fieldIds(inputId);
@@ -41,4 +41,4 @@ export function Input({
       />
     </Field>
   );
-}
+};

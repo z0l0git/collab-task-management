@@ -9,7 +9,7 @@ import { controlClasses, Field, fieldIds, type FieldProps } from "./Field";
 export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
   FieldProps;
 
-export function Textarea({
+export const Textarea = ({
   label,
   hint,
   error,
@@ -18,7 +18,7 @@ export function Textarea({
   id,
   rows = 4,
   ...props
-}: TextareaProps) {
+}: TextareaProps) => {
   const generatedId = useId();
   const textareaId = id ?? generatedId;
   const { hintId, errorId } = fieldIds(textareaId);
@@ -43,4 +43,4 @@ export function Textarea({
       />
     </Field>
   );
-}
+};

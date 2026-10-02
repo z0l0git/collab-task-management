@@ -1,6 +1,6 @@
 import { CircleDashed, SquareKanban } from "lucide-react";
 
-import { ThemeToggle } from "@/components/theme";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import {
   Badge,
   Button,
@@ -26,7 +26,7 @@ const SURFACES = [
   { token: "surface-4", className: "bg-surface-4", use: "dragging" },
 ] as const;
 
-export default function HomePage() {
+const HomePage = () => {
   return (
     <>
       <header className="border-hairline bg-canvas sticky top-0 z-10 h-14 border-b">
@@ -228,4 +228,6 @@ export default function HomePage() {
       </main>
     </>
   );
-}
+};
+
+export default HomePage;

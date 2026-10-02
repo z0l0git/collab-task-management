@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Button, Modal } from "@/components/ui";
 
-export function ModalPreview() {
+export const ModalPreview = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,4 +34,4 @@ export function ModalPreview() {
       </Modal>
     </>
   );
-}
+};
