@@ -103,5 +103,17 @@ export const removeMember = (workspaceId: string, uid: string) =>
     updatedAt: serverTimestamp(),
   });
 
+export const addLabel = (workspaceId: string, label: string) =>
+  updateDoc(workspaceRef(workspaceId), {
+    labels: arrayUnion(label.trim()),
+    updatedAt: serverTimestamp(),
+  });
+
+export const removeLabel = (workspaceId: string, label: string) =>
+  updateDoc(workspaceRef(workspaceId), {
+    labels: arrayRemove(label),
+    updatedAt: serverTimestamp(),
+  });
+
 export const deleteWorkspace = (workspaceId: string) =>
   deleteDoc(workspaceRef(workspaceId));

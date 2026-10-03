@@ -93,6 +93,58 @@ service cloud.firestore {
         && (isWorkspaceOwner() || isLeaving());
 
       allow delete: if isWorkspaceOwner();
+
+      match /tasks/{taskId} {
+
+        function workspace() {
+          return get(/databases/$(database)/documents/workspaces/$(workspaceId)).data;
+        }
+
+        function isWorkspaceMember() {
+          return isSignedIn() && request.auth.uid in workspace().memberIds;
+        }
+
+        function validTask(data, allowedAssignees, allowedLabels) {
+          return data.keys().hasOnly(['title', 'description', 'status',
+              'priority', 'assigneeId', 'dueDate', 'labels', 'order',
+              'createdBy', 'createdAt', 'updatedAt'])
+            && data.title is string
+            && data.title.size() > 0
+            && data.title.size() <= 200
+            && data.description is string
+            && data.description.size() <= 5000
+            && data.status in ['todo', 'in_progress', 'done']
+            && data.priority in ['low', 'medium', 'high', 'urgent']
+            && (data.assigneeId == null || data.assigneeId in allowedAssignees)
+            && (data.dueDate == null || data.dueDate is timestamp)
+            && data.labels is list
+            && data.labels.size() <= 10
+            && data.labels.hasOnly(allowedLabels)
+            && data.order is number
+            && data.createdBy is string;
+        }
+
+        allow read: if isWorkspaceMember();
+
+        allow create: if isWorkspaceMember()
+          && validTask(request.resource.data, workspace().memberIds,
+              workspace().labels)
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+
+        allow update: if isWorkspaceMember()
+          && validTask(request.resource.data,
+              workspace().memberIds.concat([resource.data.assigneeId]),
+              workspace().labels.concat(resource.data.labels))
+          && request.resource.data.createdBy == resource.data.createdBy
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
+
+        allow delete: if isWorkspaceMember()
+          && (resource.data.createdBy == request.auth.uid
+            || workspace().ownerId == request.auth.uid);
+      }
     }
 
     match /{document=**} {
