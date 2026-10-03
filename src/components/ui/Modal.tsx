@@ -93,7 +93,9 @@ export const Modal = ({
         </button>
       </div>
 
-      <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>
+      {children ? (
+        <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>
+      ) : null}
 
       {footer ? (
         <div className="border-hairline flex justify-end gap-2 border-t px-6 py-3">

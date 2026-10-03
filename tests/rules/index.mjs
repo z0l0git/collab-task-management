@@ -1,10 +1,12 @@
 import { call, commitWrite } from "./helpers.mjs";
+import { run as tasks } from "./tasks.mjs";
 import { run as users } from "./users.mjs";
 import { run as workspaces } from "./workspaces.mjs";
 
 const suites = [
   ["users", users],
   ["workspaces", workspaces],
+  ["tasks", tasks],
 ];
 
 const main = async () => {

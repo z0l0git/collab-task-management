@@ -5,7 +5,9 @@ import Link from "next/link";
 
 import { Button, EmptyState, Spinner } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { TaskList } from "@/features/tasks/TaskList";
 
+import { LabelsPanel } from "./LabelsPanel";
 import { MembersPanel } from "./MembersPanel";
 import { WorkspaceSettings } from "./WorkspaceSettings";
 import { isOwner } from "./types";
@@ -71,10 +73,17 @@ export const WorkspaceDetail = ({ workspaceId }: { workspaceId: string }) => {
         ) : null}
       </header>
 
-      <div className="mt-8 space-y-4">
+      <div className="mt-8">
+        <TaskList workspace={workspace} />
+      </div>
+
+      <div className="mt-10 space-y-4">
         <MembersPanel workspace={workspace} />
         {isOwner(workspace, user?.uid) ? (
-          <WorkspaceSettings workspace={workspace} />
+          <>
+            <LabelsPanel workspace={workspace} />
+            <WorkspaceSettings workspace={workspace} />
+          </>
         ) : null}
       </div>
     </>
