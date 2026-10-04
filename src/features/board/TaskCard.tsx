@@ -1,9 +1,10 @@
-import { Calendar, User } from "lucide-react";
+import { Calendar } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { Badge } from "@/components/ui";
+import { Avatar, Badge } from "@/components/ui";
 import { formatDueDate, isOverdue } from "@/features/tasks/dueDate";
-import { PRIORITY_LABELS, type Task } from "@/features/tasks/types";
+import { PriorityIcon } from "@/features/tasks/PriorityIcon";
+import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
 
 export const TaskCard = ({
@@ -14,7 +15,7 @@ export const TaskCard = ({
   lifted = false,
 }: {
   task: Task;
-  assignee: string | null;
+  assignee: Assignee | null;
   handle: ReactNode;
   onOpen?: () => void;
   lifted?: boolean;
@@ -31,10 +32,8 @@ export const TaskCard = ({
       >
         {task.title}
       </span>
-      <span className="text-caption text-ink-subtle flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-        <Badge variant={`priority-${task.priority}`} withDot>
-          {PRIORITY_LABELS[task.priority]}
-        </Badge>
+      <span className="text-caption text-ink-subtle flex items-center gap-2">
+        <PriorityIcon priority={task.priority} />
         {task.dueDate ? (
           <span
             className={cn(
@@ -47,15 +46,21 @@ export const TaskCard = ({
             {overdue ? <span className="sr-only"> (overdue)</span> : null}
           </span>
         ) : null}
+        <span className="flex min-w-0 flex-1 gap-1 overflow-hidden">
+          {task.labels.map((label) => (
+            <Badge key={label}>{label}</Badge>
+          ))}
+        </span>
         {assignee ? (
-          <span className="inline-flex min-w-0 items-center gap-1">
-            <User className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="truncate">{assignee}</span>
-          </span>
+          <>
+            <Avatar
+              name={assignee.displayName}
+              photoURL={assignee.photoURL}
+              size={20}
+            />
+            <span className="sr-only">Assigned to {assignee.displayName}</span>
+          </>
         ) : null}
-        {task.labels.map((label) => (
-          <Badge key={label}>{label}</Badge>
-        ))}
       </span>
     </>
   );

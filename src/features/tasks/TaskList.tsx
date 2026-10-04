@@ -3,7 +3,7 @@
 import type { Workspace } from "@/features/workspaces/types";
 
 import { TaskListItem } from "./TaskListItem";
-import { assigneeName, type Task } from "./types";
+import { assigneeOf, type Task } from "./types";
 
 export const TaskList = ({
   tasks,
@@ -19,7 +19,7 @@ export const TaskList = ({
       <TaskListItem
         key={task.id}
         task={task}
-        assigneeName={assigneeName(members, task.assigneeId)}
+        assignee={assigneeOf(members, task.assigneeId)}
         onOpen={onOpen}
       />
     ))}

@@ -8,7 +8,7 @@ import {
 
 import { Badge } from "@/components/ui";
 import {
-  assigneeName,
+  assigneeOf,
   STATUS_LABELS,
   type Task,
   type TaskStatus,
@@ -68,7 +68,7 @@ export const BoardColumn = ({
             <BoardCard
               key={task.id}
               task={task}
-              assignee={assigneeName(members, task.assigneeId)}
+              assignee={assigneeOf(members, task.assigneeId)}
               onOpen={onOpen}
             />
           ))}
