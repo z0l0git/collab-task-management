@@ -49,7 +49,7 @@ export const BoardView = ({
         onDragEnd={onDragEnd}
         onDragCancel={onDragCancel}
       >
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
           {columns.map(([status, items]) => (
             <BoardColumn
               key={status}

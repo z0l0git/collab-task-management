@@ -5,12 +5,23 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Button, EmptyState, Spinner } from "@/components/ui";
-import { BoardView } from "@/features/board/BoardView";
 import type { Workspace } from "@/features/workspaces/types";
 import { cn } from "@/lib/utils";
 
 import { TaskList } from "./TaskList";
 import { useTasks } from "./useTasks";
+
+const BoardView = dynamic(
+  () => import("@/features/board/BoardView").then((module) => module.BoardView),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-ink-subtle flex justify-center py-12">
+        <Spinner size="lg" />
+      </div>
+    ),
+  },
+);
 
 const TaskFormDialog = dynamic(() =>
   import("./TaskFormDialog").then((module) => module.TaskFormDialog),
