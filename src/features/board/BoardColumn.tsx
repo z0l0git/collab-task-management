@@ -47,7 +47,7 @@ export const BoardColumn = ({
       ref={setNodeRef}
       aria-labelledby={headingId}
       className={cn(
-        "border-hairline bg-surface-1 flex flex-col rounded-lg border transition-colors",
+        "border-hairline bg-surface-1 flex w-[85%] max-w-80 shrink-0 snap-start flex-col rounded-lg border transition-colors md:w-auto md:max-w-none",
         highlighted && "border-accent/60",
       )}
     >
