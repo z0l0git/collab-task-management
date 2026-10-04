@@ -71,6 +71,6 @@ jobs:
       - name: Run rules checks against the emulators
         run: >-
           npx firebase emulators:exec
-          --only auth,firestore
+          --only auth,firestore,storage
           --project demo-collab-task
           "npm run test:rules"
