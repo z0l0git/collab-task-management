@@ -4,21 +4,13 @@ import { Moon, Sun } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { THEME_STORAGE_KEY } from "./themeScript";
+import { toggleTheme } from "./toggleTheme";
 
 export const ThemeToggle = ({ className }: { className?: string }) => {
-  const toggle = () => {
-    const dark = document.documentElement.classList.toggle("dark");
-    document.documentElement.style.colorScheme = dark ? "dark" : "light";
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
-    } catch {}
-  };
-
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={toggleTheme}
       aria-label="Toggle theme"
       title="Toggle theme"
       className={cn(

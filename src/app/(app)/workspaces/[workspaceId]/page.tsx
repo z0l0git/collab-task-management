@@ -1,10 +1,5 @@
-import { WorkspaceDetail } from "@/features/workspaces/WorkspaceDetail";
+import { TasksPanel } from "@/features/tasks/TasksPanel";
 
-const WorkspacePage = async ({
-  params,
-}: PageProps<"/workspaces/[workspaceId]">) => {
-  const { workspaceId } = await params;
-  return <WorkspaceDetail workspaceId={workspaceId} />;
-};
+const WorkspacePage = () => <TasksPanel />;
 
 export default WorkspacePage;

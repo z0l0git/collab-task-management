@@ -4,7 +4,7 @@ import { closestCorners, DndContext, DragOverlay } from "@dnd-kit/core";
 import { GripVertical } from "lucide-react";
 import { useMemo } from "react";
 
-import { assigneeName, TASK_STATUSES, type Task } from "@/features/tasks/types";
+import { assigneeOf, TASK_STATUSES, type Task } from "@/features/tasks/types";
 import type { Workspace } from "@/features/workspaces/types";
 
 import { BoardColumn } from "./BoardColumn";
@@ -64,7 +64,7 @@ export const BoardView = ({
           {activeTask ? (
             <TaskCard
               task={activeTask}
-              assignee={assigneeName(workspace.members, activeTask.assigneeId)}
+              assignee={assigneeOf(workspace.members, activeTask.assigneeId)}
               lifted
               handle={
                 <GripVertical

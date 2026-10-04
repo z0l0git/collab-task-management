@@ -1,22 +1,24 @@
 "use client";
 
-import { Calendar, User } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { memo } from "react";
 
-import { Badge } from "@/components/ui";
+import { Avatar, Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 import { formatDueDate, isOverdue } from "./dueDate";
-import { PRIORITY_LABELS, STATUS_LABELS, type Task } from "./types";
+import { PriorityIcon } from "./PriorityIcon";
+import { StatusIcon } from "./StatusIcon";
+import type { Assignee, Task } from "./types";
 
 export const TaskListItem = memo(
   ({
     task,
-    assigneeName,
+    assignee,
     onOpen,
   }: {
     task: Task;
-    assigneeName: string | null;
+    assignee: Assignee | null;
     onOpen: (taskId: string) => void;
   }) => {
     const overdue = isOverdue(task);
@@ -26,45 +28,49 @@ export const TaskListItem = memo(
         <button
           type="button"
           onClick={() => onOpen(task.id)}
-          className="hover:bg-surface-2 flex w-full flex-col gap-2 px-4 py-3 text-left transition-colors"
+          className="hover:bg-surface-2 flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors"
         >
-          <div className="flex items-start justify-between gap-3">
-            <span
-              className={cn(
-                "text-ink font-medium",
-                task.status === "done" && "text-ink-subtle line-through",
-              )}
-            >
-              {task.title}
-            </span>
-            <Badge variant={`status-${task.status}`} className="shrink-0">
-              {STATUS_LABELS[task.status]}
-            </Badge>
-          </div>
-          <div className="text-caption text-ink-subtle flex flex-wrap items-center gap-x-3 gap-y-1.5">
-            <Badge variant={`priority-${task.priority}`} withDot>
-              {PRIORITY_LABELS[task.priority]}
-            </Badge>
-            <span className="inline-flex items-center gap-1">
-              <User className="size-3.5" aria-hidden="true" />
-              {assigneeName ?? "Unassigned"}
-            </span>
-            {task.dueDate ? (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1",
-                  overdue && "text-danger font-medium",
-                )}
-              >
-                <Calendar className="size-3.5" aria-hidden="true" />
-                {overdue ? "Overdue · " : null}
-                {formatDueDate(task.dueDate)}
-              </span>
-            ) : null}
+          <PriorityIcon priority={task.priority} />
+          <StatusIcon status={task.status} />
+          <span
+            className={cn(
+              "text-body-sm text-ink min-w-0 flex-1 truncate font-medium",
+              task.status === "done" && "text-ink-subtle line-through",
+            )}
+          >
+            {task.title}
+          </span>
+          <span className="hidden shrink-0 gap-1 sm:flex">
             {task.labels.map((label) => (
               <Badge key={label}>{label}</Badge>
             ))}
-          </div>
+          </span>
+          {task.dueDate ? (
+            <span
+              className={cn(
+                "text-caption text-ink-subtle inline-flex shrink-0 items-center gap-1",
+                overdue && "text-danger font-medium",
+              )}
+            >
+              <Calendar className="size-3.5" aria-hidden="true" />
+              {formatDueDate(task.dueDate)}
+              {overdue ? <span className="sr-only"> (overdue)</span> : null}
+            </span>
+          ) : null}
+          {assignee ? (
+            <>
+              <Avatar
+                name={assignee.displayName}
+                photoURL={assignee.photoURL}
+                size={20}
+              />
+              <span className="sr-only">
+                Assigned to {assignee.displayName}
+              </span>
+            </>
+          ) : (
+            <span className="sr-only">Unassigned</span>
+          )}
         </button>
       </li>
     );

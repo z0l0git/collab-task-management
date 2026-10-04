@@ -58,7 +58,14 @@ export const isTaskStatus = (value: unknown): value is TaskStatus =>
 export const isTaskPriority = (value: unknown): value is TaskPriority =>
   TASK_PRIORITIES.includes(value as TaskPriority);
 
-export const assigneeName = (
-  members: Record<string, { displayName: string }>,
+export type Assignee = { displayName: string; photoURL: string | null };
+
+const FORMER_MEMBER: Assignee = {
+  displayName: "Former member",
+  photoURL: null,
+};
+
+export const assigneeOf = (
+  members: Record<string, Assignee>,
   uid: string | null,
-) => (uid ? (members[uid]?.displayName ?? "Former member") : null);
+) => (uid ? (members[uid] ?? FORMER_MEMBER) : null);

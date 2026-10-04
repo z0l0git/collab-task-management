@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { memo } from "react";
 
-import type { Task } from "@/features/tasks/types";
+import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
 
 import { TaskCard } from "./TaskCard";
@@ -17,7 +17,7 @@ export const BoardCard = memo(
     onOpen,
   }: {
     task: Task;
-    assignee: string | null;
+    assignee: Assignee | null;
     onOpen: (taskId: string) => void;
   }) => {
     const {
