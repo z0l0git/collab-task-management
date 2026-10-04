@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { Button, EmptyState, Spinner } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { TaskList } from "@/features/tasks/TaskList";
+import { TasksPanel } from "@/features/tasks/TasksPanel";
 
 import { LabelsPanel } from "./LabelsPanel";
 import { MembersPanel } from "./MembersPanel";
@@ -74,7 +74,7 @@ export const WorkspaceDetail = ({ workspaceId }: { workspaceId: string }) => {
       </header>
 
       <div className="mt-8">
-        <TaskList workspace={workspace} />
+        <TasksPanel workspace={workspace} />
       </div>
 
       <div className="mt-10 space-y-4">

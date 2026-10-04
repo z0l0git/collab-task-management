@@ -57,3 +57,8 @@ export const isTaskStatus = (value: unknown): value is TaskStatus =>
 
 export const isTaskPriority = (value: unknown): value is TaskPriority =>
   TASK_PRIORITIES.includes(value as TaskPriority);
+
+export const assigneeName = (
+  members: Record<string, { displayName: string }>,
+  uid: string | null,
+) => (uid ? (members[uid]?.displayName ?? "Former member") : null);
