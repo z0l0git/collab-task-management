@@ -2,6 +2,31 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
+
+    function isWorkspaceMember(workspaceId) {
+      return request.auth != null
+        && request.auth.uid in firestore.get(
+          /databases/(default)/documents/workspaces/$(workspaceId)
+        ).data.memberIds;
+    }
+
+    function allowedFile() {
+      return request.resource.size > 0
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches(
+          '^(image/(png|jpeg|gif|webp)|application/pdf|text/(plain|csv)|application/vnd[.]openxmlformats-officedocument[.](wordprocessingml[.]document|spreadsheetml[.]sheet|presentationml[.]presentation))$'
+        );
+    }
+
+    match /workspaces/{workspaceId}/tasks/{taskId}/{attachmentId} {
+      allow read: if isWorkspaceMember(workspaceId);
+      allow create: if isWorkspaceMember(workspaceId)
+        && resource == null
+        && allowedFile();
+      allow update: if false;
+      allow delete: if isWorkspaceMember(workspaceId);
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

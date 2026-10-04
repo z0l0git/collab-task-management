@@ -1,4 +1,6 @@
 import { call, commitWrite } from "./helpers.mjs";
+import { run as attachments } from "./attachments.mjs";
+import { run as comments } from "./comments.mjs";
 import { run as tasks } from "./tasks.mjs";
 import { run as users } from "./users.mjs";
 import { run as workspaces } from "./workspaces.mjs";
@@ -7,7 +9,17 @@ const suites = [
   ["users", users],
   ["workspaces", workspaces],
   ["tasks", tasks],
+  ["comments", comments],
+  ["attachments", attachments],
 ];
+
+const check = (options) => {
+  if (typeof options === "function") return options();
+  const { method, path, token, body, serverTimestamps } = options;
+  return serverTimestamps
+    ? commitWrite(path, body.fields, { token, serverTimestamps })
+    : call(method, path, { token, body });
+};
 
 const main = async () => {
   let total = 0;
@@ -18,10 +30,7 @@ const main = async () => {
     const cases = await load();
 
     for (const [label, expected, options] of cases) {
-      const { method, path, token, body, serverTimestamps } = options;
-      const status = serverTimestamps
-        ? await commitWrite(path, body.fields, { token, serverTimestamps })
-        : await call(method, path, { token, body });
+      const status = await check(options);
       const ok = status === expected;
       total += 1;
       if (!ok) failed += 1;

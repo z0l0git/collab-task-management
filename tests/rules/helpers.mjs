@@ -1,6 +1,7 @@
 const PROJECT = "demo-collab-task";
 const AUTH = "http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts";
 const FS = `http://127.0.0.1:8080/v1/projects/${PROJECT}/databases/(default)/documents`;
+const BUCKET = `http://127.0.0.1:9199/v0/b/${PROJECT}.appspot.com/o`;
 
 export const signIn = async (email, password) => {
   const body = { email, password, returnSecureToken: true };
@@ -68,5 +69,40 @@ export const commitWrite = async (
       ],
     }),
   });
+  return res.status;
+};
+
+export const uploadFile = async (path, { token, contentType, bytes }) => {
+  const boundary = "rules-check";
+  const part = (text) => Buffer.from(text.replace(/\n/g, "\r\n"));
+  const body = Buffer.concat([
+    part(
+      `--${boundary}\nContent-Type: application/json\n\n` +
+        `${JSON.stringify({ name: path, contentType })}\n` +
+        `--${boundary}\nContent-Type: ${contentType}\n\n`,
+    ),
+    Buffer.alloc(bytes),
+    part(`\n--${boundary}--`),
+  ]);
+  const res = await fetch(`${BUCKET}?name=${encodeURIComponent(path)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": `multipart/related; boundary=${boundary}`,
+      "X-Goog-Upload-Protocol": "multipart",
+      ...(token ? { Authorization: `Firebase ${token}` } : {}),
+    },
+    body,
+  });
+  return res.status;
+};
+
+export const fileRequest = async (method, path, { token, media } = {}) => {
+  const res = await fetch(
+    `${BUCKET}/${encodeURIComponent(path)}${media ? "?alt=media" : ""}`,
+    {
+      method,
+      headers: token ? { Authorization: `Firebase ${token}` } : {},
+    },
+  );
   return res.status;
 };

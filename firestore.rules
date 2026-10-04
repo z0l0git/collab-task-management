@@ -144,6 +144,58 @@ service cloud.firestore {
         allow delete: if isWorkspaceMember()
           && (resource.data.createdBy == request.auth.uid
             || workspace().ownerId == request.auth.uid);
+
+        function taskExists() {
+          return exists(/databases/$(database)/documents/workspaces/$(workspaceId)/tasks/$(taskId));
+        }
+
+        match /comments/{commentId} {
+          function validComment(data) {
+            let author = workspace().members[request.auth.uid];
+            return data.keys().hasOnly(['authorId', 'authorName',
+                'authorPhotoURL', 'message', 'createdAt'])
+              && data.authorId == request.auth.uid
+              && data.authorName == author.displayName
+              && data.authorPhotoURL == author.photoURL
+              && data.message is string
+              && data.message.size() > 0
+              && data.message.size() <= 2000
+              && data.createdAt == request.time;
+          }
+
+          allow read: if isWorkspaceMember();
+          allow create: if isWorkspaceMember()
+            && taskExists()
+            && validComment(request.resource.data);
+          allow update: if false;
+          allow delete: if isWorkspaceMember()
+            && resource.data.authorId == request.auth.uid;
+        }
+
+        match /attachments/{attachmentId} {
+          function validAttachment(data) {
+            return data.keys().hasOnly(['name', 'size', 'contentType',
+                'storagePath', 'uploadedBy', 'createdAt'])
+              && data.name is string
+              && data.name.size() > 0
+              && data.name.size() <= 255
+              && data.size is int
+              && data.size > 0
+              && data.size <= 10 * 1024 * 1024
+              && data.contentType is string
+              && data.storagePath == 'workspaces/' + workspaceId + '/tasks/'
+                + taskId + '/' + attachmentId
+              && data.uploadedBy == request.auth.uid
+              && data.createdAt == request.time;
+          }
+
+          allow read: if isWorkspaceMember();
+          allow create: if isWorkspaceMember()
+            && taskExists()
+            && validAttachment(request.resource.data);
+          allow update: if false;
+          allow delete: if isWorkspaceMember();
+        }
       }
     }
 

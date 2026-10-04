@@ -4,7 +4,9 @@ import { Trash2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { Button, Input, Modal, Select, Textarea } from "@/components/ui";
+import { TaskAttachments } from "@/features/attachments/TaskAttachments";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { TaskComments } from "@/features/comments/TaskComments";
 import {
   isOwner,
   memberList,
@@ -221,6 +223,12 @@ export const TaskFormDialog = ({
             </p>
           ) : null}
         </form>
+        {task ? (
+          <div className="border-hairline mt-6 space-y-6 border-t pt-5">
+            <TaskAttachments workspaceId={workspace.id} taskId={task.id} />
+            <TaskComments workspace={workspace} taskId={task.id} />
+          </div>
+        ) : null}
       </Modal>
 
       <Modal
