@@ -2,11 +2,14 @@
 
 import { LayoutGrid, Plus, Users } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { Badge, Button, EmptyState, Spinner } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
+
+import { useAllWorkspaceTasks } from "@/features/dashboard/useAllWorkspaceTasks";
+import { WorkspaceInsights } from "@/features/dashboard/WorkspaceInsights";
 
 import { CreateWorkspaceDialog } from "./CreateWorkspaceDialog";
 import { useWorkspaces } from "./useWorkspaces";
@@ -16,6 +19,11 @@ export const WorkspaceList = () => {
   const { user } = useAuth();
   const { workspaces, loading, error } = useWorkspaces();
   const [creating, setCreating] = useState(false);
+  const workspaceIds = useMemo(
+    () => workspaces.map((workspace) => workspace.id),
+    [workspaces],
+  );
+  const tasksOf = useAllWorkspaceTasks(workspaceIds);
 
   return (
     <>
@@ -56,38 +64,61 @@ export const WorkspaceList = () => {
           />
         </PanelBody>
       ) : (
-        <ul className="divide-hairline border-hairline divide-y border-b">
-          {workspaces.map((workspace) => (
-            <li key={workspace.id}>
-              <Link
-                href={`/workspaces/${workspace.id}`}
-                className="hover:bg-surface-2 flex h-11 items-center gap-3 px-4 transition-colors lg:px-6"
-              >
-                <WorkspaceTile name={workspace.name} />
-                <span className="text-body-sm text-ink shrink-0 font-medium">
-                  {workspace.name}
-                </span>
-                <span className="text-body-sm text-ink-subtle hidden min-w-0 flex-1 truncate sm:block">
-                  {workspace.description}
-                </span>
-                <span className="text-caption text-ink-subtle ml-auto inline-flex shrink-0 items-center gap-1.5 tabular-nums">
-                  <Users className="size-3.5" aria-hidden="true" />
-                  {workspace.memberIds.length}
-                  <span className="sr-only">
-                    {workspace.memberIds.length === 1 ? " member" : " members"}
+        <PanelBody>
+          <ul className="border-hairline divide-hairline mx-auto w-full max-w-5xl divide-y overflow-hidden rounded-lg border">
+            {workspaces.map((workspace) => (
+              <li key={workspace.id}>
+                <Link
+                  href={`/workspaces/${workspace.id}`}
+                  className="hover:bg-surface-3 flex min-h-14 items-center gap-3 px-4 py-2.5 transition-colors"
+                >
+                  <WorkspaceTile name={workspace.name} size={32} />
+                  <span className="min-w-0 flex-1">
+                    <span className="text-body-sm text-ink block truncate font-medium">
+                      {workspace.name}
+                    </span>
+                    <span className="text-caption block truncate">
+                      <span className="md:hidden">
+                        <WorkspaceInsights
+                          compact
+                          state={tasksOf(workspace.id)}
+                          uid={user?.uid}
+                        />
+                      </span>
+                      <span className="text-ink-subtle hidden md:inline">
+                        {workspace.description}
+                      </span>
+                    </span>
                   </span>
-                </span>
-                <span className="w-16 shrink-0 text-right">
-                  {workspace.ownerId === user?.uid ? (
-                    <Badge variant="accent">Owner</Badge>
-                  ) : (
-                    <span className="text-caption text-ink-subtle">Member</span>
-                  )}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                  <span className="text-caption hidden shrink-0 md:flex">
+                    <WorkspaceInsights
+                      state={tasksOf(workspace.id)}
+                      uid={user?.uid}
+                    />
+                  </span>
+                  <span className="text-caption text-ink-subtle inline-flex shrink-0 items-center gap-1.5 tabular-nums">
+                    <Users className="size-3.5" aria-hidden="true" />
+                    {workspace.memberIds.length}
+                    <span className="sr-only">
+                      {workspace.memberIds.length === 1
+                        ? " member"
+                        : " members"}
+                    </span>
+                  </span>
+                  <span className="w-16 shrink-0 text-right">
+                    {workspace.ownerId === user?.uid ? (
+                      <Badge variant="accent">Owner</Badge>
+                    ) : (
+                      <span className="text-caption text-ink-subtle">
+                        Member
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </PanelBody>
       )}
 
       <CreateWorkspaceDialog

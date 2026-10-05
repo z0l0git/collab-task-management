@@ -1,7 +1,6 @@
 "use client";
 
 import { closestCorners, DndContext, DragOverlay } from "@dnd-kit/core";
-import { GripVertical } from "lucide-react";
 import { useMemo } from "react";
 
 import {
@@ -74,12 +73,6 @@ export const BoardView = ({
               task={activeTask}
               assignee={assigneeOf(workspace.members, activeTask.assigneeId)}
               lifted
-              handle={
-                <GripVertical
-                  className="text-ink m-0.5 size-4 shrink-0"
-                  aria-hidden="true"
-                />
-              }
             />
           ) : null}
         </DragOverlay>
