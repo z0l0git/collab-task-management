@@ -44,6 +44,7 @@ const FONT_SIZES = [
   "display-md",
   "headline",
   "card-title",
+  "title",
   "subhead",
   "body-lg",
   "body",
