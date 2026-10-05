@@ -32,6 +32,7 @@ export const GoogleButton = ({
 }) => (
   <Button
     variant="secondary"
+    size="lg"
     fullWidth
     onClick={onClick}
     disabled={disabled}

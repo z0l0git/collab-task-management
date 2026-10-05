@@ -74,6 +74,17 @@ export const AuthForm = ({ mode }: { mode: Mode }) => {
 
   return (
     <div className="space-y-5">
+      <GoogleButton
+        disabled={pending}
+        onClick={() => void run(signInWithGoogle)}
+      />
+
+      <div className="flex items-center gap-3">
+        <span className="bg-hairline h-px flex-1" />
+        <span className="text-caption text-ink-subtle">or</span>
+        <span className="bg-hairline h-px flex-1" />
+      </div>
+
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         {mode === "signup" ? (
           <Input
@@ -116,23 +127,12 @@ export const AuthForm = ({ mode }: { mode: Mode }) => {
           </p>
         ) : null}
 
-        <Button type="submit" fullWidth isLoading={pending}>
+        <Button type="submit" size="lg" fullWidth isLoading={pending}>
           {mode === "signup" ? "Create account" : "Sign in"}
         </Button>
       </form>
 
-      <div className="flex items-center gap-3">
-        <span className="bg-hairline h-px flex-1" />
-        <span className="text-caption text-ink-subtle">or</span>
-        <span className="bg-hairline h-px flex-1" />
-      </div>
-
-      <GoogleButton
-        disabled={pending}
-        onClick={() => void run(signInWithGoogle)}
-      />
-
-      <p className="text-body-sm text-ink-subtle text-center">
+      <p className="text-body-sm text-ink-subtle pt-2 text-center">
         {mode === "signup" ? "Already have an account? " : "New here? "}
         <Link
           href={mode === "signup" ? "/login" : "/signup"}
