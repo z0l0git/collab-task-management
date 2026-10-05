@@ -24,14 +24,11 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 flex items-center justify-center gap-2">
-          <span className="bg-accent text-on-accent rounded-sm p-1">
-            <SquareKanban className="size-4" aria-hidden="true" />
-          </span>
-          <span className="text-ink font-medium">Taskboard</span>
-        </div>
+    <div className="bg-canvas flex flex-1 flex-col items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xs">
+        <span className="bg-accent text-on-accent mx-auto mb-6 flex size-10 items-center justify-center rounded-lg">
+          <SquareKanban className="size-5" aria-hidden="true" />
+        </span>
         {children}
       </div>
     </div>
