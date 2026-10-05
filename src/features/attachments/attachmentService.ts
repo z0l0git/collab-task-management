@@ -67,7 +67,7 @@ export const uploadAttachment = async (
   }
 };
 
-export const attachmentUrl = (attachment: Attachment) =>
+export const attachmentUrl = (attachment: Pick<Attachment, "storagePath">) =>
   getDownloadURL(ref(getFirebaseStorage(), attachment.storagePath));
 
 export const deleteAttachment = async (

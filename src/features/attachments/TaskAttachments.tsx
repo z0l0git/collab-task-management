@@ -18,9 +18,11 @@ import {
   deleteAttachment,
   uploadAttachment,
 } from "./attachmentService";
+import { AttachmentThumbnail } from "./AttachmentThumbnail";
 import {
   ATTACHMENT_ACCEPT,
   formatBytes,
+  isImageAttachment,
   validateAttachment,
   type Attachment,
 } from "./types";
@@ -46,6 +48,10 @@ export const TaskAttachments = ({
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const uploading = upload !== null && !upload.error;
+  const images = attachments.filter(isImageAttachment);
+  const files = attachments.filter(
+    (attachment) => !isImageAttachment(attachment),
+  );
 
   const start = async (file: File) => {
     if (!user) return;
@@ -150,96 +156,115 @@ export const TaskAttachments = ({
           No files yet. Images, PDFs, text, CSV and Office files up to 10 MB.
         </p>
       ) : (
-        <ul className="border-hairline divide-hairline divide-y rounded-md border">
-          {attachments.map((attachment) => (
-            <li
-              key={attachment.id}
-              className="flex items-center gap-3 px-3 py-2"
+        <div className="space-y-3">
+          {images.length > 0 ? (
+            <ul
+              aria-label="Images"
+              className="grid grid-cols-3 gap-2 sm:grid-cols-4"
             >
-              <FileText
-                className="text-ink-subtle size-4 shrink-0"
-                aria-hidden="true"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="text-body-sm text-ink truncate">
-                  {attachment.name}
-                </p>
-                <p className="text-caption text-ink-subtle">
-                  {formatBytes(attachment.size)}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => void onOpen(attachment)}
-                aria-label={`Open ${attachment.name}`}
-                className={iconButton}
-              >
-                <ExternalLink className="size-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => void onDelete(attachment)}
-                disabled={deletingId === attachment.id}
-                aria-label={`Delete ${attachment.name}`}
-                className={`${iconButton} hover:text-danger`}
-              >
-                <Trash2 className="size-4" aria-hidden="true" />
-              </button>
-            </li>
-          ))}
-          {upload ? (
-            <li className="flex items-center gap-3 px-3 py-2">
-              <FileText
-                className="text-ink-subtle size-4 shrink-0"
-                aria-hidden="true"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="text-body-sm text-ink truncate">
-                  {upload.file.name}
-                </p>
-                {upload.error ? (
-                  <p role="alert" className="text-caption text-danger">
-                    {upload.error}
-                  </p>
-                ) : (
-                  <div
-                    role="progressbar"
-                    aria-label={`Uploading ${upload.file.name}`}
-                    aria-valuenow={upload.progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    className="bg-surface-4 mt-1.5 h-1 overflow-hidden rounded-full"
-                  >
-                    <div
-                      className="bg-accent h-full transition-[width]"
-                      style={{ width: `${upload.progress}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-              {upload.error ? (
-                <>
-                  <Button
-                    variant="ghost"
-                    leadingIcon={
-                      <RotateCw className="size-4" aria-hidden="true" />
-                    }
-                    onClick={() => void start(upload.file)}
-                  >
-                    Retry
-                  </Button>
-                  <Button variant="ghost" onClick={() => setUpload(null)}>
-                    Dismiss
-                  </Button>
-                </>
-              ) : (
-                <span className="text-caption text-ink-subtle tabular-nums">
-                  {upload.progress}%
-                </span>
-              )}
-            </li>
+              {images.map((attachment) => (
+                <AttachmentThumbnail
+                  key={attachment.id}
+                  attachment={attachment}
+                  deleting={deletingId === attachment.id}
+                  onDelete={() => void onDelete(attachment)}
+                />
+              ))}
+            </ul>
           ) : null}
-        </ul>
+          {files.length > 0 || upload ? (
+            <ul className="border-hairline divide-hairline divide-y rounded-md border">
+              {files.map((attachment) => (
+                <li
+                  key={attachment.id}
+                  className="flex items-center gap-3 px-3 py-2"
+                >
+                  <FileText
+                    className="text-ink-subtle size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-body-sm text-ink truncate">
+                      {attachment.name}
+                    </p>
+                    <p className="text-caption text-ink-subtle">
+                      {formatBytes(attachment.size)}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void onOpen(attachment)}
+                    aria-label={`Open ${attachment.name}`}
+                    className={iconButton}
+                  >
+                    <ExternalLink className="size-4" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void onDelete(attachment)}
+                    disabled={deletingId === attachment.id}
+                    aria-label={`Delete ${attachment.name}`}
+                    className={`${iconButton} hover:text-danger`}
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+              {upload ? (
+                <li className="flex items-center gap-3 px-3 py-2">
+                  <FileText
+                    className="text-ink-subtle size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-body-sm text-ink truncate">
+                      {upload.file.name}
+                    </p>
+                    {upload.error ? (
+                      <p role="alert" className="text-caption text-danger">
+                        {upload.error}
+                      </p>
+                    ) : (
+                      <div
+                        role="progressbar"
+                        aria-label={`Uploading ${upload.file.name}`}
+                        aria-valuenow={upload.progress}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        className="bg-surface-4 mt-1.5 h-1 overflow-hidden rounded-full"
+                      >
+                        <div
+                          className="bg-accent h-full transition-[width]"
+                          style={{ width: `${upload.progress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {upload.error ? (
+                    <>
+                      <Button
+                        variant="ghost"
+                        leadingIcon={
+                          <RotateCw className="size-4" aria-hidden="true" />
+                        }
+                        onClick={() => void start(upload.file)}
+                      >
+                        Retry
+                      </Button>
+                      <Button variant="ghost" onClick={() => setUpload(null)}>
+                        Dismiss
+                      </Button>
+                    </>
+                  ) : (
+                    <span className="text-caption text-ink-subtle tabular-nums">
+                      {upload.progress}%
+                    </span>
+                  )}
+                </li>
+              ) : null}
+            </ul>
+          ) : null}
+        </div>
       )}
 
       {actionError ? (
