@@ -43,16 +43,6 @@ export const createTask = async (
   return created.id;
 };
 
-export const updateTask = (
-  workspaceId: string,
-  taskId: string,
-  input: TaskInput,
-) =>
-  updateDoc(taskRef(workspaceId, taskId), {
-    ...toFields(input),
-    updatedAt: serverTimestamp(),
-  });
-
 export const updateTaskFields = (
   workspaceId: string,
   taskId: string,

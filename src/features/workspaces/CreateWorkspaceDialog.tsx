@@ -80,7 +80,7 @@ export const CreateWorkspaceDialog = ({
           error={nameError}
           maxLength={80}
           required
-          autoFocus
+          data-autofocus
         />
         <Textarea
           label="Description"
