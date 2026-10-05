@@ -9,7 +9,7 @@ const SIZES = {
   sm: "max-w-sm",
   md: "max-w-lg",
   lg: "max-w-2xl",
-  xl: "max-w-5xl",
+  xl: "max-w-5xl max-md:m-0 max-md:h-dvh max-md:max-h-none max-md:w-full max-md:max-w-none max-md:rounded-none max-md:border-0 max-md:open:flex max-md:open:flex-col",
 } as const;
 
 type ModalHeading =

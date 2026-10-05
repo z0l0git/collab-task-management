@@ -12,8 +12,9 @@ const baseClasses =
 
 const VARIANTS: Record<Variant, { wrapper: string; control: string }> = {
   row: {
-    wrapper: "relative w-full",
-    control: "text-body-sm h-8 w-full rounded-md bg-transparent pr-2 pl-8",
+    wrapper: "relative inline-flex md:flex md:w-full",
+    control:
+      "text-caption border-hairline bg-surface-1 field-sizing-content h-7 rounded-full border pr-3 pl-7 font-medium md:text-body-sm md:field-sizing-fixed md:h-8 md:w-full md:rounded-md md:border-0 md:bg-transparent md:pr-2 md:pl-8 md:font-normal",
   },
   pill: {
     wrapper: "relative inline-flex",
@@ -32,7 +33,7 @@ const LeadingIcon = ({
   <span
     className={cn(
       "pointer-events-none absolute top-1/2 flex -translate-y-1/2 items-center",
-      variant === "row" ? "left-2" : "left-2.5",
+      variant === "row" ? "left-2.5 md:left-2" : "left-2.5",
     )}
   >
     {children}
@@ -117,8 +118,8 @@ export const PropertyDateChip = ({
           baseClasses,
           VARIANTS[variant].control,
           "[&::-webkit-calendar-picker-indicator]:hidden",
-          variant === "pill" && "w-36",
-          draft ? "pr-7" : "text-ink-tertiary",
+          variant === "pill" ? "w-36" : "max-md:w-36",
+          draft ? "pr-7 md:pr-7" : "text-ink-tertiary",
           danger && "text-danger font-medium",
         )}
       />
