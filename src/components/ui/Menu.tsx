@@ -25,6 +25,7 @@ export type MenuProps = {
   trigger: ReactNode;
   triggerClassName?: string;
   side?: "top" | "bottom";
+  align?: "start" | "end";
   children: ReactNode;
 };
 
@@ -33,6 +34,7 @@ export const Menu = ({
   trigger,
   triggerClassName,
   side = "bottom",
+  align = "start",
   children,
 }: MenuProps) => {
   const [open, setOpen] = useState(false);
@@ -108,8 +110,9 @@ export const Menu = ({
           aria-label={label}
           onKeyDown={onPanelKeyDown}
           className={cn(
-            "border-hairline bg-surface-3 shadow-modal absolute left-0 z-30 max-h-80 w-full min-w-56 overflow-y-auto rounded-md border p-1",
+            "border-hairline bg-surface-3 shadow-modal absolute z-30 max-h-80 w-full min-w-56 overflow-y-auto rounded-md border p-1",
             side === "bottom" ? "top-full mt-1" : "bottom-full mb-1",
+            align === "start" ? "left-0" : "right-0",
           )}
         >
           <MenuContext.Provider value={() => close(false)}>

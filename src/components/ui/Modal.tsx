@@ -9,15 +9,24 @@ const SIZES = {
   sm: "max-w-sm",
   md: "max-w-lg",
   lg: "max-w-2xl",
+  xl: "max-w-5xl",
 } as const;
 
-export type ModalProps = {
+type ModalHeading =
+  | { title: string; description?: string; header?: never; labelledBy?: never }
+  | {
+      header: ReactNode;
+      labelledBy: string;
+      title?: never;
+      description?: never;
+    };
+
+export type ModalProps = ModalHeading & {
   open: boolean;
   onClose: () => void;
-  title: string;
-  description?: string;
   size?: keyof typeof SIZES;
   footer?: ReactNode;
+  bodyClassName?: string;
   children?: ReactNode;
 };
 
@@ -26,8 +35,11 @@ export const Modal = ({
   onClose,
   title,
   description,
+  header,
+  labelledBy,
   size = "md",
   footer,
+  bodyClassName,
   children,
 }: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -57,7 +69,7 @@ export const Modal = ({
   return (
     <dialog
       ref={dialogRef}
-      aria-labelledby={titleId}
+      aria-labelledby={labelledBy ?? titleId}
       aria-describedby={description ? descriptionId : undefined}
       onClose={() => {
         if (open) onClose();
@@ -72,29 +84,41 @@ export const Modal = ({
         SIZES[size],
       )}
     >
-      <div className="border-hairline flex items-start gap-4 border-b px-6 py-4">
-        <div className="flex-1">
-          <h2 id={titleId} className="text-card-title text-ink">
-            {title}
-          </h2>
-          {description ? (
-            <p id={descriptionId} className="text-body-sm text-ink-subtle mt-1">
-              {description}
-            </p>
-          ) : null}
+      {header ?? (
+        <div className="border-hairline flex items-start gap-4 border-b px-6 py-4">
+          <div className="flex-1">
+            <h2 id={titleId} className="text-card-title text-ink">
+              {title}
+            </h2>
+            {description ? (
+              <p
+                id={descriptionId}
+                className="text-body-sm text-ink-subtle mt-1"
+              >
+                {description}
+              </p>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="text-ink-subtle hover:bg-surface-3 hover:text-ink -m-1 rounded-md p-1 transition-colors"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close dialog"
-          className="text-ink-subtle hover:bg-surface-3 hover:text-ink -m-1 rounded-md p-1 transition-colors"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </button>
-      </div>
+      )}
 
       {children ? (
-        <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>
+        <div
+          className={cn(
+            "max-h-[70vh] overflow-y-auto px-6 py-5",
+            bodyClassName,
+          )}
+        >
+          {children}
+        </div>
       ) : null}
 
       {footer ? (

@@ -2,11 +2,13 @@
 
 import { Columns3, List, ListTodo, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { Button, EmptyState, Spinner } from "@/components/ui";
 import { useCurrentWorkspace } from "@/features/workspaces/WorkspaceProvider";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/lib/utils";
 
 import { TaskList } from "./TaskList";
@@ -28,6 +30,10 @@ const TaskFormDialog = dynamic(() =>
   import("./TaskFormDialog").then((module) => module.TaskFormDialog),
 );
 
+const TaskDetailDialog = dynamic(() =>
+  import("./TaskDetailDialog").then((module) => module.TaskDetailDialog),
+);
+
 const VIEWS = [
   { value: "board", label: "Board", icon: Columns3 },
   { value: "list", label: "List", icon: List },
@@ -38,13 +44,43 @@ type View = (typeof VIEWS)[number]["value"];
 export const TasksPanel = () => {
   const workspace = useCurrentWorkspace();
   const { tasks, loading, error } = useTasks(workspace.id);
-  const [view, setView] = useState<View>("board");
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const { searchParams, setParams } = useQueryParams();
+  const view: View = searchParams.get("view") === "list" ? "list" : "board";
+  const setView = (next: View) =>
+    setParams({ view: next === "board" ? null : next });
+  const router = useRouter();
+  const [form, setForm] = useState<"new" | "edit" | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const openedHereRef = useRef(false);
 
-  const editingTask =
-    editingId && editingId !== "new"
-      ? tasks.find((task) => task.id === editingId)
-      : undefined;
+  const taskId = searchParams.get("task");
+  const openTask = taskId
+    ? tasks.find((task) => task.id === taskId)
+    : undefined;
+
+  const onOpenTask = useCallback(
+    (id: string) => {
+      openerRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      openedHereRef.current = true;
+      setParams({ task: id }, "push");
+    },
+    [setParams],
+  );
+
+  const onCloseTask = () => {
+    if (openedHereRef.current) router.back();
+    else setParams({ task: null });
+  };
+
+  useEffect(() => {
+    if (taskId) return;
+    openedHereRef.current = false;
+    if (openerRef.current?.isConnected) openerRef.current.focus();
+    openerRef.current = null;
+  }, [taskId]);
 
   return (
     <>
@@ -57,7 +93,7 @@ export const TasksPanel = () => {
           <Button
             size="sm"
             leadingIcon={<Plus className="size-3.5" aria-hidden="true" />}
-            onClick={() => setEditingId("new")}
+            onClick={() => setForm("new")}
           >
             New task
           </Button>
@@ -112,31 +148,39 @@ export const TasksPanel = () => {
               icon={ListTodo}
               title="No tasks yet"
               description="Create the first task for this workspace."
-              action={
-                <Button onClick={() => setEditingId("new")}>New task</Button>
-              }
+              action={<Button onClick={() => setForm("new")}>New task</Button>}
             />
           ) : view === "board" ? (
             <BoardView
               workspace={workspace}
               tasks={tasks}
-              onOpen={setEditingId}
+              onOpen={onOpenTask}
             />
           ) : (
             <TaskList
               tasks={tasks}
               members={workspace.members}
-              onOpen={setEditingId}
+              onOpen={onOpenTask}
             />
           )}
         </div>
 
-        {editingId === "new" || editingTask ? (
-          <TaskFormDialog
-            key={editingId}
+        {taskId && !loading ? (
+          <TaskDetailDialog
+            key={taskId}
             workspace={workspace}
-            task={editingTask}
-            onClose={() => setEditingId(null)}
+            task={openTask}
+            onClose={onCloseTask}
+            onEdit={() => setForm("edit")}
+          />
+        ) : null}
+
+        {form === "new" || (form === "edit" && openTask) ? (
+          <TaskFormDialog
+            key={form === "edit" ? openTask?.id : "new"}
+            workspace={workspace}
+            task={form === "edit" ? openTask : undefined}
+            onClose={() => setForm(null)}
           />
         ) : null}
       </PanelBody>
