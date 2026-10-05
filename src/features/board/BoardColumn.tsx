@@ -5,6 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui";
 import {
@@ -25,11 +26,13 @@ export const BoardColumn = ({
   tasks,
   members,
   onOpen,
+  onCreate,
 }: {
   status: TaskStatus;
   tasks: Task[];
   members: Workspace["members"];
   onOpen: (taskId: string) => void;
+  onCreate: (status: TaskStatus) => void;
 }) => {
   const { setNodeRef } = useDroppable({
     id: columnId(status),
@@ -58,6 +61,14 @@ export const BoardColumn = ({
           </Badge>
         </h3>
         <span className="text-caption text-ink-subtle">{tasks.length}</span>
+        <button
+          type="button"
+          onClick={() => onCreate(status)}
+          aria-label={`New ${STATUS_LABELS[status]} task`}
+          className="text-ink-subtle hover:bg-surface-3 hover:text-ink ml-auto rounded-md p-1 transition-colors"
+        >
+          <Plus className="size-3.5" aria-hidden="true" />
+        </button>
       </header>
       <SortableContext
         items={tasks.map((task) => task.id)}

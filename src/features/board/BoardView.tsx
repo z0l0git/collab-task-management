@@ -4,7 +4,12 @@ import { closestCorners, DndContext, DragOverlay } from "@dnd-kit/core";
 import { GripVertical } from "lucide-react";
 import { useMemo } from "react";
 
-import { assigneeOf, TASK_STATUSES, type Task } from "@/features/tasks/types";
+import {
+  assigneeOf,
+  TASK_STATUSES,
+  type Task,
+  type TaskStatus,
+} from "@/features/tasks/types";
 import type { Workspace } from "@/features/workspaces/types";
 
 import { BoardColumn } from "./BoardColumn";
@@ -16,10 +21,12 @@ export const BoardView = ({
   workspace,
   tasks,
   onOpen,
+  onCreate,
 }: {
   workspace: Workspace;
   tasks: Task[];
   onOpen: (taskId: string) => void;
+  onCreate: (status: TaskStatus) => void;
 }) => {
   const { sensors, activeTask, error, onDragStart, onDragEnd, onDragCancel } =
     useBoardDrag(workspace.id, tasks);
@@ -57,6 +64,7 @@ export const BoardView = ({
               tasks={items}
               members={workspace.members}
               onOpen={onOpen}
+              onCreate={onCreate}
             />
           ))}
         </div>
