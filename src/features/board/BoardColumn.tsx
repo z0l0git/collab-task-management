@@ -7,7 +7,7 @@ import {
 } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
-import { Badge } from "@/components/ui";
+import { StatusIcon } from "@/features/tasks/StatusIcon";
 import {
   assigneeOf,
   STATUS_LABELS,
@@ -50,15 +50,14 @@ export const BoardColumn = ({
       ref={setNodeRef}
       aria-labelledby={headingId}
       className={cn(
-        "border-hairline bg-surface-1 flex w-[85%] max-w-80 shrink-0 snap-start flex-col rounded-lg border transition-colors md:w-auto md:max-w-none",
-        highlighted && "border-accent/60",
+        "bg-column flex w-[85%] max-w-80 shrink-0 snap-start flex-col rounded-lg ring-1 ring-transparent transition-shadow md:w-auto md:max-w-none",
+        highlighted && "ring-accent/60",
       )}
     >
-      <header className="flex items-center gap-2 px-3 pt-3 pb-2">
-        <h3 id={headingId}>
-          <Badge variant={`status-${status}`} withDot>
-            {STATUS_LABELS[status]}
-          </Badge>
+      <header className="flex h-10 items-center gap-2 pr-1.5 pl-3">
+        <StatusIcon status={status} />
+        <h3 id={headingId} className="text-eyebrow text-ink font-medium">
+          {STATUS_LABELS[status]}
         </h3>
         <span className="text-caption text-ink-subtle">{tasks.length}</span>
         <button
@@ -74,7 +73,7 @@ export const BoardColumn = ({
         items={tasks.map((task) => task.id)}
         strategy={verticalListSortingStrategy}
       >
-        <ul className="flex min-h-24 flex-1 flex-col gap-2 px-2 pb-2">
+        <ul className="flex min-h-24 flex-1 flex-col gap-1.5 px-1.5 pb-1.5">
           {tasks.map((task) => (
             <BoardCard
               key={task.id}

@@ -27,6 +27,10 @@ export type Attachment = {
   createdAt: Timestamp | null;
 };
 
+export const isImageAttachment = (
+  attachment: Pick<Attachment, "contentType">,
+) => attachment.contentType.startsWith("image/");
+
 export const validateAttachment = (file: { size: number; type: string }) => {
   if (!(ALLOWED_ATTACHMENT_TYPES as readonly string[]).includes(file.type)) {
     return "That file type isn't supported. Use an image, PDF, text, CSV or Office file.";

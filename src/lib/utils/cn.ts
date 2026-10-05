@@ -36,6 +36,8 @@ const COLORS = [
   "status-progress",
   "status-done",
   "scrim",
+  "panel",
+  "column",
 ];
 
 const FONT_SIZES = [

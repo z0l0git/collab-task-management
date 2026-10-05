@@ -7,6 +7,8 @@ import { PriorityIcon } from "@/features/tasks/PriorityIcon";
 import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
 
+const MAX_LABELS = 2;
+
 export const TaskCard = ({
   task,
   assignee,
@@ -21,12 +23,14 @@ export const TaskCard = ({
   lifted?: boolean;
 }) => {
   const overdue = isOverdue(task);
+  const shownLabels = task.labels.slice(0, MAX_LABELS);
+  const hiddenLabels = task.labels.length - shownLabels.length;
 
   const body = (
     <>
       <span
         className={cn(
-          "text-body-sm text-ink font-medium wrap-break-word",
+          "text-body-sm text-ink line-clamp-2 font-medium wrap-break-word",
           task.status === "done" && "text-ink-subtle line-through",
         )}
       >
@@ -46,10 +50,21 @@ export const TaskCard = ({
             {overdue ? <span className="sr-only"> (overdue)</span> : null}
           </span>
         ) : null}
-        <span className="flex min-w-0 flex-1 gap-1 overflow-hidden">
-          {task.labels.map((label) => (
-            <Badge key={label}>{label}</Badge>
+        <span className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
+          {shownLabels.map((label) => (
+            <Badge key={label} className="min-w-0 truncate">
+              {label}
+            </Badge>
           ))}
+          {hiddenLabels > 0 ? (
+            <span className="shrink-0">
+              +{hiddenLabels}
+              <span className="sr-only">
+                {" "}
+                more {hiddenLabels === 1 ? "label" : "labels"}
+              </span>
+            </span>
+          ) : null}
         </span>
         {assignee ? (
           <>
@@ -68,10 +83,10 @@ export const TaskCard = ({
   return (
     <div
       className={cn(
-        "border-hairline bg-surface-2 flex items-start gap-1 rounded-md border p-2 transition-colors",
+        "border-hairline bg-surface-3 flex items-start gap-1 rounded-md border p-2 transition-colors",
         lifted
-          ? "bg-surface-3 border-hairline-strong shadow-modal"
-          : "hover:bg-surface-3 hover:border-hairline-strong",
+          ? "bg-surface-4 border-hairline-strong shadow-modal"
+          : "hover:border-hairline-strong",
       )}
     >
       {handle}

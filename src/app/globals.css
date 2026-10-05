@@ -10,6 +10,7 @@
   --surface-3: #ffffff;
   --surface-4: #ffffff;
   --panel: #ffffff;
+  --column: #f6f7f8;
 
   --hairline: #e1e3e6;
   --hairline-strong: #cdd0d4;
@@ -60,6 +61,7 @@
   --surface-3: #18191a;
   --surface-4: #191a1b;
   --panel: #0f1011;
+  --column: #141516;
 
   --hairline: #23252a;
   --hairline-strong: #34343a;
@@ -109,6 +111,7 @@
   --color-surface-3: var(--surface-3);
   --color-surface-4: var(--surface-4);
   --color-panel: var(--panel);
+  --color-column: var(--column);
 
   --color-hairline: var(--hairline);
   --color-hairline-strong: var(--hairline-strong);

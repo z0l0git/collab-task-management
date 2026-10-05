@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatBytes,
+  isImageAttachment,
   MAX_ATTACHMENT_BYTES,
   validateAttachment,
 } from "../types";
@@ -35,5 +36,12 @@ describe("formatBytes", () => {
     expect(formatBytes(512)).toBe("512 B");
     expect(formatBytes(2048)).toBe("2 KB");
     expect(formatBytes(3.5 * 1024 * 1024)).toBe("3.5 MB");
+  });
+});
+
+describe("isImageAttachment", () => {
+  it("is true for image types and false for documents", () => {
+    expect(isImageAttachment({ contentType: "image/webp" })).toBe(true);
+    expect(isImageAttachment({ contentType: "application/pdf" })).toBe(false);
   });
 });
