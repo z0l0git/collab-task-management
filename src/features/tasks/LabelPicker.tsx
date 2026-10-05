@@ -10,10 +10,12 @@ export const LabelPicker = ({
   options,
   value,
   onChange,
+  compact = false,
 }: {
   options: string[];
   value: string[];
   onChange: (labels: string[]) => void;
+  compact?: boolean;
 }) => {
   const choices = [...new Set([...options, ...value])];
   const full = value.length >= TASK_LIMITS.labels;
@@ -27,10 +29,19 @@ export const LabelPicker = ({
 
   return (
     <fieldset className="flex flex-col gap-1.5">
-      <legend className="text-eyebrow text-ink-muted mb-1.5">Labels</legend>
+      <legend
+        className={cn(
+          "text-eyebrow text-ink-muted mb-1.5",
+          compact && "sr-only",
+        )}
+      >
+        Labels
+      </legend>
       {choices.length === 0 ? (
         <p className="text-caption text-ink-subtle">
-          No labels yet. The workspace owner can add them in settings.
+          {compact
+            ? "No labels yet"
+            : "No labels yet. The workspace owner can add them in settings."}
         </p>
       ) : (
         <div className="flex flex-wrap gap-1.5">
@@ -44,7 +55,8 @@ export const LabelPicker = ({
                 disabled={!selected && full}
                 onClick={() => toggle(label)}
                 className={cn(
-                  "text-caption inline-flex items-center gap-1 rounded-full border px-2.5 py-1 font-medium transition-colors",
+                  "text-caption inline-flex items-center gap-1 rounded-full border font-medium transition-colors",
+                  compact ? "h-6 px-2" : "px-2.5 py-1",
                   "disabled:cursor-not-allowed disabled:opacity-50",
                   selected
                     ? "border-accent bg-accent-soft/10 text-accent-soft"

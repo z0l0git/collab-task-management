@@ -21,6 +21,7 @@ import { toUserMessage } from "@/lib/firebase";
 import { deleteTask } from "./taskService";
 import { TaskProperties } from "./TaskProperties";
 import type { Task } from "./types";
+import { useTaskAutosave, type SaveStatus } from "./useTaskAutosave";
 
 const iconButtonClasses =
   "text-ink-subtle hover:bg-surface-3 hover:text-ink rounded-md p-1.5 transition-colors";
@@ -60,6 +61,21 @@ const DialogHeader = ({
       <X className="size-4" aria-hidden="true" />
     </button>
   </div>
+);
+
+const SAVE_LABELS: Record<SaveStatus, string> = {
+  idle: "",
+  saving: "Saving…",
+  saved: "Saved",
+};
+
+const SaveIndicator = ({ status }: { status: SaveStatus }) => (
+  <span
+    aria-live="polite"
+    className="text-caption text-ink-subtle mr-1 hidden sm:inline"
+  >
+    {SAVE_LABELS[status]}
+  </span>
 );
 
 const CopyLinkButton = () => {
@@ -113,6 +129,10 @@ export const TaskDetailDialog = ({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const autosave = useTaskAutosave(
+    workspace.id,
+    task?.id ?? shownTask?.id ?? "",
+  );
 
   if (task && task !== shownTask) setShownTask(task);
   const current = task ?? (deleting ? shownTask : undefined);
@@ -160,6 +180,7 @@ export const TaskDetailDialog = ({
             taskTitle={current.title}
             onClose={onClose}
           >
+            <SaveIndicator status={autosave.status} />
             <Button
               variant="ghost"
               size="sm"
@@ -188,7 +209,7 @@ export const TaskDetailDialog = ({
             ) : null}
           </DialogHeader>
         }
-        bodyClassName="max-h-[calc(100dvh-8rem)] p-0 md:grid md:h-[min(80vh,48rem)] md:grid-cols-[minmax(0,1fr)_16rem] md:overflow-hidden"
+        bodyClassName="max-h-[calc(100dvh-8rem)] p-0 md:grid md:h-[min(80vh,48rem)] md:grid-cols-[minmax(0,1fr)_17.5rem] md:overflow-hidden"
       >
         <div className="min-w-0 space-y-6 px-6 py-6 md:overflow-y-auto md:px-8">
           <div className="space-y-3">
@@ -220,7 +241,19 @@ export const TaskDetailDialog = ({
           aria-label="Properties"
           className="border-hairline border-t px-4 py-5 md:overflow-y-auto md:border-t-0 md:border-l"
         >
-          <TaskProperties task={current} workspace={workspace} />
+          <TaskProperties
+            task={current}
+            workspace={workspace}
+            onSave={(fields) => void autosave.save(fields)}
+          />
+          {autosave.error ? (
+            <p
+              role="alert"
+              className="bg-danger/10 text-danger text-caption mt-3 rounded-md px-3 py-2"
+            >
+              {autosave.error}
+            </p>
+          ) : null}
         </aside>
       </Modal>
 

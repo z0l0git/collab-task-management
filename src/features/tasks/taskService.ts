@@ -53,6 +53,21 @@ export const updateTask = (
     updatedAt: serverTimestamp(),
   });
 
+export const updateTaskFields = (
+  workspaceId: string,
+  taskId: string,
+  fields: Partial<TaskInput>,
+) => {
+  const { dueDate, ...rest } = fields;
+  return updateDoc(taskRef(workspaceId, taskId), {
+    ...rest,
+    ...(dueDate !== undefined && {
+      dueDate: dueDate ? Timestamp.fromDate(dueDate) : null,
+    }),
+    updatedAt: serverTimestamp(),
+  });
+};
+
 export const moveTask = (
   workspaceId: string,
   taskId: string,
