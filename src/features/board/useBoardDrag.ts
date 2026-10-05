@@ -1,7 +1,8 @@
 "use client";
 
 import {
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -20,7 +21,10 @@ export const useBoardDrag = (workspaceId: string, tasks: Task[]) => {
   const [error, setError] = useState("");
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 6 },
+    }),
   );
 
   const onDragStart = ({ active }: DragStartEvent) => {

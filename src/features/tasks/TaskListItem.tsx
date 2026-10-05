@@ -16,10 +16,12 @@ export const TaskListItem = memo(
     task,
     assignee,
     onOpen,
+    context,
   }: {
     task: Task;
     assignee: Assignee | null;
     onOpen: (taskId: string) => void;
+    context?: string;
   }) => {
     const overdue = isOverdue(task);
 
@@ -45,6 +47,11 @@ export const TaskListItem = memo(
               <Badge key={label}>{label}</Badge>
             ))}
           </span>
+          {context ? (
+            <span className="text-caption text-ink-subtle hidden max-w-40 shrink-0 truncate md:block">
+              {context}
+            </span>
+          ) : null}
           {task.dueDate ? (
             <span
               className={cn(

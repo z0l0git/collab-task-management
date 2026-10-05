@@ -1,5 +1,4 @@
 import { Calendar } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { Avatar, Badge } from "@/components/ui";
 import { formatDueDate, isOverdue } from "@/features/tasks/dueDate";
@@ -12,13 +11,11 @@ const MAX_LABELS = 2;
 export const TaskCard = ({
   task,
   assignee,
-  handle,
   onOpen,
   lifted = false,
 }: {
   task: Task;
   assignee: Assignee | null;
-  handle: ReactNode;
   onOpen?: () => void;
   lifted?: boolean;
 }) => {
@@ -80,27 +77,18 @@ export const TaskCard = ({
     </>
   );
 
-  return (
-    <div
-      className={cn(
-        "border-hairline bg-surface-3 flex items-start gap-1 rounded-md border p-2 transition-colors",
-        lifted
-          ? "bg-surface-4 border-hairline-strong shadow-modal"
-          : "hover:border-hairline-strong",
-      )}
-    >
-      {handle}
-      {onOpen ? (
-        <button
-          type="button"
-          onClick={onOpen}
-          className="flex min-w-0 flex-1 flex-col gap-2 rounded-sm py-0.5 text-left"
-        >
-          {body}
-        </button>
-      ) : (
-        <div className="flex min-w-0 flex-1 flex-col gap-2 py-0.5">{body}</div>
-      )}
-    </div>
+  const cardClasses = cn(
+    "border-hairline bg-surface-3 flex w-full flex-col gap-2 rounded-md border p-2.5 text-left transition-colors",
+    lifted
+      ? "bg-surface-4 border-hairline-strong shadow-modal cursor-grabbing"
+      : "hover:border-hairline-strong",
+  );
+
+  return onOpen ? (
+    <button type="button" onClick={onOpen} className={cardClasses}>
+      {body}
+    </button>
+  ) : (
+    <div className={cardClasses}>{body}</div>
   );
 };
