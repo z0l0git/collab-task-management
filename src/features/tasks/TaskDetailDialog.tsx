@@ -155,13 +155,25 @@ export const TaskDetailDialog = ({
             ) : null}
           </TaskDialogHeader>
         }
-        bodyClassName="max-h-[calc(100dvh-8rem)] p-0 md:grid md:h-[min(80vh,48rem)] md:grid-cols-[minmax(0,1fr)_17.5rem] md:overflow-hidden"
+        bodyClassName="max-h-[calc(100dvh-8rem)] p-0 max-md:max-h-none max-md:flex-1 md:grid md:h-[min(80vh,48rem)] md:grid-cols-[minmax(0,1fr)_17.5rem] md:grid-rows-[auto_1fr]"
       >
-        <div className="min-w-0 space-y-6 px-6 py-6 md:overflow-y-auto md:px-8">
-          <div className="space-y-2">
-            <InlineTitle id={titleId} value={current.title} onSave={save} />
-            <InlineDescription value={current.description} onSave={save} />
+        <div className="min-w-0 px-5 pt-5 md:col-start-1 md:px-8 md:pt-6">
+          <InlineTitle id={titleId} value={current.title} onSave={save} />
+        </div>
+        <aside
+          aria-label="Properties"
+          className="border-hairline px-5 pt-3 md:col-start-2 md:row-span-2 md:row-start-1 md:border-l md:px-4 md:py-5"
+        >
+          <div className="md:sticky md:top-0">
+            <TaskProperties
+              task={current}
+              workspace={workspace}
+              onSave={save}
+            />
           </div>
+        </aside>
+        <div className="min-w-0 space-y-6 px-5 pt-4 pb-6 md:col-start-1 md:px-8 md:pt-2">
+          <InlineDescription value={current.description} onSave={save} />
           {error || autosave.error ? (
             <p
               role="alert"
@@ -175,12 +187,6 @@ export const TaskDetailDialog = ({
             <TaskComments workspace={workspace} taskId={current.id} />
           </div>
         </div>
-        <aside
-          aria-label="Properties"
-          className="border-hairline border-t px-4 py-5 md:overflow-y-auto md:border-t-0 md:border-l"
-        >
-          <TaskProperties task={current} workspace={workspace} onSave={save} />
-        </aside>
       </Modal>
 
       <Modal

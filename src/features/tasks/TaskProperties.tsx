@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { Avatar } from "@/components/ui";
 import { memberList, type Workspace } from "@/features/workspaces/types";
+import { cn } from "@/lib/utils";
 
 import { fromDateInputValue, isOverdue, toDateInputValue } from "./dueDate";
 import { LabelPicker } from "./LabelPicker";
@@ -34,21 +35,25 @@ const createdFormat = new Intl.DateTimeFormat(undefined, {
 const Property = ({
   label,
   align = "center",
+  desktopOnly = false,
   children,
 }: {
   label: string;
   align?: "center" | "start";
+  desktopOnly?: boolean;
   children: ReactNode;
 }) => (
   <div
-    className={
+    className={cn(
+      "md:grid md:grid-cols-[4.5rem_minmax(0,1fr)] md:gap-1",
       align === "center"
-        ? "grid min-h-8 grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-1"
-        : "grid grid-cols-[4.5rem_minmax(0,1fr)] items-start gap-1 py-1.5"
-    }
+        ? "md:min-h-8 md:items-center"
+        : "md:items-start md:py-1.5",
+      desktopOnly ? "max-md:hidden" : "max-md:contents",
+    )}
   >
-    <dt className="text-caption text-ink-subtle">{label}</dt>
-    <dd className="flex min-w-0 items-center">{children}</dd>
+    <dt className="text-caption text-ink-subtle max-md:sr-only">{label}</dt>
+    <dd className="min-w-0 items-center max-md:contents md:flex">{children}</dd>
   </div>
 );
 
@@ -78,7 +83,7 @@ export const TaskProperties = ({
   ];
 
   return (
-    <dl className="space-y-0.5">
+    <dl className="flex flex-wrap items-center gap-2 md:block md:space-y-0.5">
       <Property label="Status">
         <PropertyChip
           label="Status"
@@ -128,7 +133,7 @@ export const TaskProperties = ({
         />
       </Property>
       <Property label="Labels" align="start">
-        <div className="px-2">
+        <div className="md:px-2">
           <LabelPicker
             compact
             options={workspace.labels}
@@ -137,7 +142,7 @@ export const TaskProperties = ({
           />
         </div>
       </Property>
-      <Property label="Created">
+      <Property label="Created" desktopOnly>
         <span className="text-body-sm text-ink-muted truncate px-2">
           {[
             creator?.displayName,
