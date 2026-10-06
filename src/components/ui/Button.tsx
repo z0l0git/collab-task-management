@@ -21,6 +21,19 @@ const SIZES = {
   icon: "size-8 justify-center",
 } as const;
 
+export const buttonClasses = ({
+  variant = "primary",
+  size = "md",
+}: {
+  variant?: keyof typeof VARIANTS;
+  size?: keyof typeof SIZES;
+} = {}) =>
+  cn(
+    "inline-flex items-center rounded-md transition-colors",
+    VARIANTS[variant],
+    SIZES[size],
+  );
+
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof VARIANTS;
   size?: keyof typeof SIZES;
@@ -49,11 +62,9 @@ export const Button = ({
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
       className={cn(
-        "inline-flex items-center rounded-md transition-colors",
+        buttonClasses({ variant, size }),
         "disabled:pointer-events-none",
         disabled && !isLoading && "opacity-50",
-        VARIANTS[variant],
-        SIZES[size],
         fullWidth && "w-full justify-center",
         className,
       )}
