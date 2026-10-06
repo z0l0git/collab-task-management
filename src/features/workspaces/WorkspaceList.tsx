@@ -10,6 +10,7 @@ import { useAuth } from "@/features/auth/AuthProvider";
 
 import { useAllWorkspaceTasks } from "@/features/dashboard/useAllWorkspaceTasks";
 import { WorkspaceInsights } from "@/features/dashboard/WorkspaceInsights";
+import { doneStatusIds } from "@/features/tasks/statuses";
 
 import { CreateWorkspaceDialog } from "./CreateWorkspaceDialog";
 import { useWorkspaces } from "./useWorkspaces";
@@ -83,6 +84,7 @@ export const WorkspaceList = () => {
                           compact
                           state={tasksOf(workspace.id)}
                           uid={user?.uid}
+                          doneIds={doneStatusIds(workspace.statuses)}
                         />
                       </span>
                       <span className="text-ink-subtle hidden md:inline">
@@ -94,6 +96,7 @@ export const WorkspaceList = () => {
                     <WorkspaceInsights
                       state={tasksOf(workspace.id)}
                       uid={user?.uid}
+                      doneIds={doneStatusIds(workspace.statuses)}
                     />
                   </span>
                   <span className="text-caption text-ink-subtle inline-flex shrink-0 items-center gap-1.5 tabular-nums">

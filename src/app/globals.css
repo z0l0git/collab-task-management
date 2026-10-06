@@ -45,9 +45,14 @@
   --priority-high: #a64c08;
   --priority-urgent: #ba3338;
 
-  --status-todo: #6b7076;
-  --status-progress: #8b5d00;
-  --status-done: #187633;
+  --status-gray: #6b7076;
+  --status-blue: #2f6bd0;
+  --status-green: #187633;
+  --status-yellow: #8b5d00;
+  --status-orange: #ad5008;
+  --status-red: #c2352c;
+  --status-purple: #7246cf;
+  --status-pink: #b12f77;
 
   --scrim: rgb(13 14 16 / 0.45);
   --modal-shadow: 0 16px 48px rgb(13 14 16 / 0.18);
@@ -96,9 +101,14 @@
   --priority-high: #e8793d;
   --priority-urgent: #eb5757;
 
-  --status-todo: #8a8f98;
-  --status-progress: #d9a441;
-  --status-done: #27a644;
+  --status-gray: #8a8f98;
+  --status-blue: #5e9eff;
+  --status-green: #27a644;
+  --status-yellow: #d9a441;
+  --status-orange: #e8793d;
+  --status-red: #eb5757;
+  --status-purple: #a58af5;
+  --status-pink: #e46aa6;
 
   --scrim: rgb(0 0 0 / 0.7);
   --modal-shadow: 0 16px 48px rgb(0 0 0 / 0.6);
@@ -143,9 +153,14 @@
   --color-priority-high: var(--priority-high);
   --color-priority-urgent: var(--priority-urgent);
 
-  --color-status-todo: var(--status-todo);
-  --color-status-progress: var(--status-progress);
-  --color-status-done: var(--status-done);
+  --color-status-gray: var(--status-gray);
+  --color-status-blue: var(--status-blue);
+  --color-status-green: var(--status-green);
+  --color-status-yellow: var(--status-yellow);
+  --color-status-orange: var(--status-orange);
+  --color-status-red: var(--status-red);
+  --color-status-purple: var(--status-purple);
+  --color-status-pink: var(--status-pink);
 
   --color-scrim: var(--scrim);
 

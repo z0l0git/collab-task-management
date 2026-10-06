@@ -14,10 +14,6 @@ const VARIANTS = {
   "priority-medium": "bg-priority-medium/10 text-priority-medium",
   "priority-high": "bg-priority-high/10 text-priority-high",
   "priority-urgent": "bg-priority-urgent/10 text-priority-urgent",
-
-  "status-todo": "bg-surface-2 text-ink-subtle border border-hairline",
-  "status-in_progress": "bg-status-progress/10 text-status-progress",
-  "status-done": "bg-status-done/10 text-status-done",
 } as const;
 
 export type BadgeVariant = keyof typeof VARIANTS;

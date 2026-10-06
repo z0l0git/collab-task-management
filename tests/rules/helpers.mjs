@@ -106,3 +106,23 @@ export const fileRequest = async (method, path, { token, media } = {}) => {
   );
   return res.status;
 };
+
+export const statusMap = (entries) => ({
+  mapValue: {
+    fields: Object.fromEntries(
+      entries.map(([statusId, name, done], order) => [
+        statusId,
+        {
+          mapValue: {
+            fields: {
+              name: { stringValue: name },
+              color: { stringValue: "gray" },
+              done: { booleanValue: done },
+              order: { integerValue: String(order) },
+            },
+          },
+        },
+      ]),
+    ),
+  },
+});

@@ -6,7 +6,7 @@ import {
   type WithFieldValue,
 } from "firebase/firestore";
 
-import { isTaskPriority, isTaskStatus, type Task } from "./types";
+import { isTaskPriority, type Task } from "./types";
 
 const asTimestamp = (value: unknown) =>
   value instanceof Timestamp ? value : null;
@@ -25,7 +25,7 @@ export const taskConverter: FirestoreDataConverter<Task> = {
       id: snapshot.id,
       title: asString(data.title),
       description: asString(data.description),
-      status: isTaskStatus(data.status) ? data.status : "todo",
+      status: typeof data.status === "string" ? data.status : "todo",
       priority: isTaskPriority(data.priority) ? data.priority : "medium",
       assigneeId:
         typeof data.assigneeId === "string" && data.assigneeId

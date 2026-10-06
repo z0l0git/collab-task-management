@@ -9,21 +9,25 @@ import { cn } from "@/lib/utils";
 import { formatDueDate, isOverdue } from "./dueDate";
 import { PriorityIcon } from "./PriorityIcon";
 import { StatusIcon } from "./StatusIcon";
+import type { TaskStatus } from "./statuses";
 import type { Assignee, Task } from "./types";
 
 export const TaskListItem = memo(
   ({
     task,
+    status,
     assignee,
     onOpen,
     context,
   }: {
     task: Task;
+    status: TaskStatus | undefined;
     assignee: Assignee | null;
     onOpen: (taskId: string) => void;
     context?: string;
   }) => {
-    const overdue = isOverdue(task);
+    const done = status?.done ?? false;
+    const overdue = isOverdue(task, done);
 
     return (
       <li>
@@ -33,11 +37,11 @@ export const TaskListItem = memo(
           className="hover:bg-surface-3 flex h-10 w-full items-center gap-3 px-4 text-left transition-colors"
         >
           <PriorityIcon priority={task.priority} />
-          <StatusIcon status={task.status} />
+          <StatusIcon status={status} />
           <span
             className={cn(
               "text-body-sm text-ink min-w-0 flex-1 truncate font-medium",
-              task.status === "done" && "text-ink-subtle line-through",
+              done && "text-ink-subtle line-through",
             )}
           >
             {task.title}

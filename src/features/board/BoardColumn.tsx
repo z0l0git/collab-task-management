@@ -7,43 +7,43 @@ import {
 } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
+import { statusById, type TaskStatus } from "@/features/tasks/statuses";
 import { StatusIcon } from "@/features/tasks/StatusIcon";
-import {
-  assigneeOf,
-  STATUS_LABELS,
-  type Task,
-  type TaskStatus,
-} from "@/features/tasks/types";
+import { assigneeOf, type Task } from "@/features/tasks/types";
 import type { Workspace } from "@/features/workspaces/types";
 import { cn } from "@/lib/utils";
 
 import { BoardCard } from "./BoardCard";
 
-const columnId = (status: TaskStatus) => `column-${status}`;
-
 export const BoardColumn = ({
+  columnKey,
   status,
   tasks,
   members,
+  statuses,
   onOpen,
   onCreate,
 }: {
-  status: TaskStatus;
+  columnKey: string;
+  status: TaskStatus | undefined;
   tasks: Task[];
   members: Workspace["members"];
+  statuses: TaskStatus[];
   onOpen: (taskId: string) => void;
-  onCreate: (status: TaskStatus) => void;
+  onCreate: (status: string) => void;
 }) => {
   const { setNodeRef } = useDroppable({
-    id: columnId(status),
-    data: { type: "column", status },
-    disabled: tasks.length > 0,
+    id: `column-${columnKey}`,
+    data: { type: "column", status: status?.id },
+    disabled: !status || tasks.length > 0,
   });
   const { active, over } = useDndContext();
   const highlighted =
-    over?.data.current?.status === status &&
-    active?.data.current?.status !== status;
-  const headingId = `${columnId(status)}-heading`;
+    status !== undefined &&
+    over?.data.current?.status === status.id &&
+    active?.data.current?.status !== status.id;
+  const headingId = `column-${columnKey}-heading`;
+  const name = status?.name ?? "No status";
 
   return (
     <section
@@ -56,18 +56,23 @@ export const BoardColumn = ({
     >
       <header className="flex h-10 items-center gap-2 pr-1.5 pl-3">
         <StatusIcon status={status} />
-        <h3 id={headingId} className="text-eyebrow text-ink font-medium">
-          {STATUS_LABELS[status]}
+        <h3
+          id={headingId}
+          className="text-eyebrow text-ink truncate font-medium"
+        >
+          {name}
         </h3>
         <span className="text-caption text-ink-subtle">{tasks.length}</span>
-        <button
-          type="button"
-          onClick={() => onCreate(status)}
-          aria-label={`New ${STATUS_LABELS[status]} task`}
-          className="text-ink-subtle hover:bg-surface-3 hover:text-ink ml-auto rounded-md p-1 transition-colors"
-        >
-          <Plus className="size-3.5" aria-hidden="true" />
-        </button>
+        {status ? (
+          <button
+            type="button"
+            onClick={() => onCreate(status.id)}
+            aria-label={`New ${name} task`}
+            className="text-ink-subtle hover:bg-surface-3 hover:text-ink ml-auto rounded-md p-1 transition-colors"
+          >
+            <Plus className="size-3.5" aria-hidden="true" />
+          </button>
+        ) : null}
       </header>
       <SortableContext
         items={tasks.map((task) => task.id)}
@@ -78,6 +83,7 @@ export const BoardColumn = ({
             <BoardCard
               key={task.id}
               task={task}
+              status={statusById(statuses, task.status)}
               assignee={assigneeOf(members, task.assigneeId)}
               onOpen={onOpen}
             />
