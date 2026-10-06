@@ -17,6 +17,8 @@ export const TASK_LIMITS = {
   labels: 10,
 } as const;
 
+export const TASKS_PAGE_SIZE = 50;
+
 export type Task = {
   id: string;
   title: string;

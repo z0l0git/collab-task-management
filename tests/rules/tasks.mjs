@@ -38,6 +38,13 @@ const stored = (createdBy, overrides = {}) => ({
   },
 });
 
+const countTasks = {
+  structuredAggregationQuery: {
+    structuredQuery: { from: [{ collectionId: "tasks" }] },
+    aggregations: [{ alias: "total", count: {} }],
+  },
+};
+
 export const run = async () => {
   const owner = await signIn("task-owner@example.com", "hunter2pass");
   const guest = await signIn("task-member@example.com", "hunter2pass");
@@ -174,6 +181,26 @@ export const run = async () => {
       "a member can list tasks",
       200,
       { method: "GET", path: `${ws}/tasks`, token: guest.idToken },
+    ],
+    [
+      "a non-member cannot count tasks",
+      403,
+      {
+        method: "POST",
+        path: `${ws}:runAggregationQuery`,
+        token: outsider.idToken,
+        body: countTasks,
+      },
+    ],
+    [
+      "CONTROL: a member can count tasks for the dashboard",
+      200,
+      {
+        method: "POST",
+        path: `${ws}:runAggregationQuery`,
+        token: guest.idToken,
+        body: countTasks,
+      },
     ],
 
     [
