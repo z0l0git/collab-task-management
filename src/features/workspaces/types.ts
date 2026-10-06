@@ -1,5 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 
+import type { TaskStatus } from "@/features/tasks/statuses";
+
 export const WORKSPACE_ROLES = ["owner", "member"] as const;
 
 export type WorkspaceRole = (typeof WORKSPACE_ROLES)[number];
@@ -19,6 +21,7 @@ export type Workspace = {
   memberIds: string[];
   members: Record<string, WorkspaceMember>;
   labels: string[];
+  statuses: TaskStatus[];
   createdAt: Timestamp | null;
   updatedAt: Timestamp | null;
 };

@@ -3,6 +3,7 @@ import { Calendar } from "lucide-react";
 import { Avatar, Badge } from "@/components/ui";
 import { formatDueDate, isOverdue } from "@/features/tasks/dueDate";
 import { PriorityIcon } from "@/features/tasks/PriorityIcon";
+import type { TaskStatus } from "@/features/tasks/statuses";
 import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
 
@@ -10,16 +11,19 @@ const MAX_LABELS = 2;
 
 export const TaskCard = ({
   task,
+  status,
   assignee,
   onOpen,
   lifted = false,
 }: {
   task: Task;
+  status: TaskStatus | undefined;
   assignee: Assignee | null;
   onOpen?: () => void;
   lifted?: boolean;
 }) => {
-  const overdue = isOverdue(task);
+  const done = status?.done ?? false;
+  const overdue = isOverdue(task, done);
   const shownLabels = task.labels.slice(0, MAX_LABELS);
   const hiddenLabels = task.labels.length - shownLabels.length;
 
@@ -28,7 +32,7 @@ export const TaskCard = ({
       <span
         className={cn(
           "text-body-sm text-ink line-clamp-2 font-medium wrap-break-word",
-          task.status === "done" && "text-ink-subtle line-through",
+          done && "text-ink-subtle line-through",
         )}
       >
         {task.title}

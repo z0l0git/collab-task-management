@@ -1,4 +1,4 @@
-import { call, profile, signIn } from "./helpers.mjs";
+import { call, profile, signIn, statusMap } from "./helpers.mjs";
 
 const strings = (values) => ({
   arrayValue: { values: values.map((value) => ({ stringValue: value })) },
@@ -86,6 +86,47 @@ export const run = async () => {
   for (const [id, body] of Object.entries(seeds)) {
     await call("PATCH", `${ws}/tasks/${id}`, { token: "owner", body });
   }
+
+  const custom = "/workspaces/ws-custom-statuses";
+  await call("PATCH", custom, {
+    token: "owner",
+    body: {
+      fields: {
+        name: { stringValue: "Custom statuses fixture" },
+        description: { stringValue: "" },
+        ownerId: { stringValue: owner.uid },
+        memberIds: strings([owner.uid, guest.uid]),
+        members: {
+          mapValue: {
+            fields: {
+              [owner.uid]: member("owner"),
+              [guest.uid]: member("member"),
+            },
+          },
+        },
+        labels: strings([]),
+        statuses: statusMap([
+          ["backlog", "Backlog", false],
+          ["shipped", "Shipped", true],
+        ]),
+        createdAt: { timestampValue: "2026-01-01T00:00:00Z" },
+        updatedAt: { timestampValue: "2026-01-01T00:00:00Z" },
+      },
+    },
+  });
+  await call("PATCH", `${custom}/tasks/orphaned`, {
+    token: "owner",
+    body: stored(guest.uid, { status: { stringValue: "retired" } }),
+  });
+  for (const leftover of [`${ws}/tasks/created`, `${custom}/tasks/in-custom`]) {
+    await call("DELETE", leftover, { token: "owner" });
+  }
+  const write = (path, token, body, serverTimestamps) => ({
+    path,
+    token,
+    body,
+    serverTimestamps,
+  });
 
   const create = (id, token, body) => ({
     path: `${ws}/tasks/${id}`,
@@ -269,6 +310,50 @@ export const run = async () => {
         path: `${ws}/tasks/owner-deletes`,
         token: owner.idToken,
       },
+    ],
+
+    [
+      "CONTROL: a member can create a task in a custom status",
+      200,
+      write(
+        `${custom}/tasks/in-custom`,
+        guest.idToken,
+        task(guest.uid, { status: { stringValue: "shipped" } }),
+        ["createdAt", "updatedAt"],
+      ),
+    ],
+    [
+      "a task cannot use a default status the workspace replaced",
+      403,
+      write(
+        `${custom}/tasks/old-default`,
+        guest.idToken,
+        task(guest.uid, { status: { stringValue: "todo" } }),
+        ["createdAt", "updatedAt"],
+      ),
+    ],
+    [
+      "CONTROL: an edit may keep a deleted status",
+      200,
+      write(
+        `${custom}/tasks/orphaned`,
+        guest.idToken,
+        edited(guest.uid, {
+          status: { stringValue: "retired" },
+          title: { stringValue: "Still editable" },
+        }),
+        ["updatedAt"],
+      ),
+    ],
+    [
+      "an edit cannot move a task to an unknown status",
+      403,
+      write(
+        `${custom}/tasks/orphaned`,
+        guest.idToken,
+        edited(guest.uid, { status: { stringValue: "made-up" } }),
+        ["updatedAt"],
+      ),
     ],
   ];
 };

@@ -8,6 +8,7 @@ import { useAuth } from "@/features/auth/AuthProvider";
 import { DeleteWorkspaceCard } from "./DeleteWorkspaceCard";
 import { LabelsPanel } from "./LabelsPanel";
 import { MembersPanel } from "./MembersPanel";
+import { StatusesPanel } from "./StatusesPanel";
 import { isOwner } from "./types";
 import { useCurrentWorkspace } from "./WorkspaceProvider";
 import { WorkspaceSettings } from "./WorkspaceSettings";
@@ -38,6 +39,7 @@ export const WorkspaceSettingsView = () => {
           <MembersPanel workspace={workspace} />
           {owner ? (
             <>
+              <StatusesPanel workspace={workspace} />
               <LabelsPanel workspace={workspace} />
               <DeleteWorkspaceCard workspace={workspace} />
             </>

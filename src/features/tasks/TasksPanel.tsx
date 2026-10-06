@@ -12,7 +12,7 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/lib/utils";
 
 import { TaskList } from "./TaskList";
-import { isTaskStatus, type TaskStatus } from "./types";
+import { statusById } from "./statuses";
 import { useTasks } from "./useTasks";
 
 const BoardView = dynamic(
@@ -56,7 +56,10 @@ export const TasksPanel = () => {
   const taskId = searchParams.get("task");
   const creating = taskId === "new";
   const statusParam = searchParams.get("status");
-  const initialStatus = isTaskStatus(statusParam) ? statusParam : "todo";
+  const initialStatus =
+    statusParam && statusById(workspace.statuses, statusParam)
+      ? statusParam
+      : (workspace.statuses[0]?.id ?? "todo");
   const openTask =
     taskId && !creating ? tasks.find((task) => task.id === taskId) : undefined;
 
@@ -78,7 +81,7 @@ export const TasksPanel = () => {
   );
 
   const onCreateTask = useCallback(
-    (status?: TaskStatus) =>
+    (status?: string) =>
       openDialog(status ? { task: "new", status } : { task: "new" }),
     [openDialog],
   );
@@ -174,6 +177,7 @@ export const TasksPanel = () => {
             <TaskList
               tasks={tasks}
               members={workspace.members}
+              statuses={workspace.statuses}
               onOpen={onOpenTask}
             />
           )}

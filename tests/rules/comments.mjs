@@ -62,6 +62,7 @@ export const run = async () => {
   });
 
   const task = `${ws}/tasks/t1`;
+  await call("DELETE", `${task}/comments/new`, { token: "owner" });
   await call("PATCH", task, {
     token: "owner",
     body: {

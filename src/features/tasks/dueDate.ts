@@ -21,10 +21,8 @@ const startOfToday = () => {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 };
 
-export const isOverdue = (task: Pick<Task, "dueDate" | "status">) =>
-  task.status !== "done" &&
-  task.dueDate !== null &&
-  task.dueDate.toDate() < startOfToday();
+export const isOverdue = (task: Pick<Task, "dueDate">, done: boolean) =>
+  !done && task.dueDate !== null && task.dueDate.toDate() < startOfToday();
 
 const dueFormat = new Intl.DateTimeFormat(undefined, {
   month: "short",

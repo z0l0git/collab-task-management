@@ -46,6 +46,7 @@ export const PropertyChip = <T extends string>({
   icon,
   onChange,
   variant = "row",
+  className,
 }: {
   label: string;
   value: T;
@@ -53,6 +54,7 @@ export const PropertyChip = <T extends string>({
   icon: ReactNode;
   onChange: (value: T) => void;
   variant?: Variant;
+  className?: string;
 }) => (
   <div className={VARIANTS[variant].wrapper}>
     <LeadingIcon variant={variant}>{icon}</LeadingIcon>
@@ -60,7 +62,7 @@ export const PropertyChip = <T extends string>({
       aria-label={label}
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className={cn(baseClasses, VARIANTS[variant].control)}
+      className={cn(baseClasses, VARIANTS[variant].control, className)}
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

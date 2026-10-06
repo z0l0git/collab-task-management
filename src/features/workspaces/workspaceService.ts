@@ -15,9 +15,11 @@ import {
   where,
 } from "firebase/firestore";
 
+import type { TaskStatus } from "@/features/tasks/statuses";
 import { getFirebaseDb } from "@/lib/firebase";
 
 import type { WorkspaceMember } from "./types";
+import { statusesToFirestore } from "./workspaceConverter";
 
 const workspacesRef = () => collection(getFirebaseDb(), "workspaces");
 
@@ -112,6 +114,12 @@ export const addLabel = (workspaceId: string, label: string) =>
 export const removeLabel = (workspaceId: string, label: string) =>
   updateDoc(workspaceRef(workspaceId), {
     labels: arrayRemove(label),
+    updatedAt: serverTimestamp(),
+  });
+
+export const updateStatuses = (workspaceId: string, statuses: TaskStatus[]) =>
+  updateDoc(workspaceRef(workspaceId), {
+    statuses: statusesToFirestore(statuses),
     updatedAt: serverTimestamp(),
   });
 

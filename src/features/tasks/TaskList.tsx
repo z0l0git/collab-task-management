@@ -5,41 +5,54 @@ import { useMemo } from "react";
 import { columnTasks } from "@/features/board/ordering";
 import type { Workspace } from "@/features/workspaces/types";
 
+import { statusById, type TaskStatus } from "./statuses";
 import { StatusIcon } from "./StatusIcon";
 import { TaskListItem } from "./TaskListItem";
-import { assigneeOf, STATUS_LABELS, TASK_STATUSES, type Task } from "./types";
+import { assigneeOf, type Task } from "./types";
 
 export const TaskList = ({
   tasks,
   members,
+  statuses,
   onOpen,
 }: {
   tasks: Task[];
   members: Workspace["members"];
+  statuses: TaskStatus[];
   onOpen: (taskId: string) => void;
 }) => {
-  const groups = useMemo(
-    () =>
-      TASK_STATUSES.map(
-        (status) => [status, columnTasks(tasks, status)] as const,
-      ).filter(([, items]) => items.length > 0),
-    [tasks],
-  );
+  const groups = useMemo(() => {
+    const known = new Set(statuses.map((status) => status.id));
+    return [
+      ...statuses.map((status) => ({
+        key: status.id,
+        status: status as TaskStatus | undefined,
+        items: columnTasks(tasks, status.id),
+      })),
+      {
+        key: "no-status",
+        status: undefined,
+        items: tasks
+          .filter((task) => !known.has(task.status))
+          .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id)),
+      },
+    ].filter((group) => group.items.length > 0);
+  }, [tasks, statuses]);
 
   return (
     <div className="border-hairline overflow-clip rounded-lg border">
-      {groups.map(([status, items]) => (
+      {groups.map(({ key, status, items }) => (
         <section
-          key={status}
-          aria-labelledby={`list-group-${status}`}
+          key={key}
+          aria-labelledby={`list-group-${key}`}
           className="[&:last-child>ul]:border-b-0"
         >
           <h3
-            id={`list-group-${status}`}
+            id={`list-group-${key}`}
             className="bg-column border-hairline text-eyebrow text-ink sticky top-11 z-10 flex h-9 items-center gap-2 border-b px-4 font-medium"
           >
             <StatusIcon status={status} />
-            {STATUS_LABELS[status]}
+            {status?.name ?? "No status"}
             <span className="text-caption text-ink-subtle font-normal">
               {items.length}
             </span>
@@ -49,6 +62,7 @@ export const TaskList = ({
               <TaskListItem
                 key={task.id}
                 task={task}
+                status={statusById(statuses, task.status)}
                 assignee={assigneeOf(members, task.assigneeId)}
                 onOpen={onOpen}
               />

@@ -10,7 +10,7 @@ import {
 
 import { getFirebaseDb } from "@/lib/firebase";
 
-import type { TaskInput, TaskStatus } from "./types";
+import type { TaskInput } from "./types";
 
 export const tasksRef = (workspaceId: string) =>
   collection(getFirebaseDb(), "workspaces", workspaceId, "tasks");
@@ -61,7 +61,7 @@ export const updateTaskFields = (
 export const moveTask = (
   workspaceId: string,
   taskId: string,
-  move: { status: TaskStatus; order: number },
+  move: { status: string; order: number },
 ) =>
   updateDoc(taskRef(workspaceId, taskId), {
     status: move.status,
