@@ -22,6 +22,7 @@ export const useShell = () => useContext(ShellContext);
 export const AppShell = ({ children }: { children: ReactNode }) => {
   const { workspaces } = useWorkspaces();
   const drawerRef = useRef<HTMLDialogElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
   const [navOpen, setNavOpen] = useState(false);
   const pathname = usePathname();
   const [navPathname, setNavPathname] = useState(pathname);
@@ -35,7 +36,10 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     const drawer = drawerRef.current;
     if (!drawer) return;
     if (navOpen && !drawer.open) drawer.showModal();
-    else if (!navOpen && drawer.open) drawer.close();
+    else if (!navOpen && drawer.open) {
+      drawer.close();
+      if (document.activeElement === document.body) mainRef.current?.focus();
+    }
   }, [navOpen]);
 
   return (
@@ -76,6 +80,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       </dialog>
 
       <main
+        ref={mainRef}
         id="main"
         tabIndex={-1}
         className="bg-panel lg:border-hairline flex min-w-0 flex-1 flex-col overflow-y-auto outline-none lg:my-2 lg:mr-2 lg:rounded-lg lg:border"

@@ -121,7 +121,7 @@ export const PropertyDateChip = ({
           VARIANTS[variant].control,
           "[&::-webkit-calendar-picker-indicator]:hidden",
           variant === "pill" ? "w-36" : "max-md:w-36",
-          draft ? "pr-7 md:pr-7" : "text-ink-tertiary",
+          draft ? "pr-7 md:pr-7" : "text-ink-subtle",
           danger && "text-danger font-medium",
         )}
       />
