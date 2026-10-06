@@ -1,6 +1,6 @@
 export { Avatar, type AvatarProps } from "./Avatar";
 export { Badge, type BadgeProps, type BadgeVariant } from "./Badge";
-export { Button, type ButtonProps } from "./Button";
+export { Button, buttonClasses, type ButtonProps } from "./Button";
 export {
   Card,
   CardContent,
