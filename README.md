@@ -4,9 +4,10 @@ A collaborative task management application: shared workspaces, a real-time
 Kanban board, task comments and file attachments, built with Next.js and
 Firebase.
 
-> **Status: Sprint 1 (authentication).** The toolchain, design system, Firebase
-> wiring, emulators and authentication are in place. Workspaces and tasks land
-> in the sprints that follow, and this README grows with them.
+> **Status:** authentication, workspaces and members, tasks with a real-time
+> Kanban board and list, comments, attachments, custom statuses, search,
+> filters, sort, pagination and a workspace dashboard are in place.
+> Hardening, tests and deployment come next; this README is completed then.
 
 ## Stack
 
@@ -87,6 +88,8 @@ ships them to the browser by design. What protects the data is
 | `npm run format`           | Prettier write                                        |
 | `npm run format:check`     | Prettier check (runs in CI)                           |
 | `npm run test:rules`       | Security-rules checks (emulators must be running)     |
+| `npm test`                 | Unit tests (Vitest)                                   |
+| `npm run audit:contrast`   | WCAG contrast check of the colour tokens              |
 | `npm run emulators`        | Auth, Firestore and Storage emulators                 |
 | `npm run emulators:export` | Save current emulator data to `.emulator-data`        |
 | `npm run emulators:import` | Start emulators from `.emulator-data`, saving on exit |
@@ -134,8 +137,8 @@ badge-only palette, always paired with a text label so colour is never the
 only signal.
 
 Every token pair is measured against WCAG AA. Where a value failed, it was
-changed rather than copied — the full audit and a re-runnable script live in
-`.design/linear-reskin/`.
+changed rather than copied. `npm run audit:contrast` reads the tokens from
+`globals.css` and checks every text, icon and focus-ring pair in both themes.
 
 ```
 bg-canvas  bg-surface-1..4   border-hairline[-strong|-tertiary]

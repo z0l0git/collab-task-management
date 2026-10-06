@@ -14,6 +14,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,mts,css,json,mjs,yml,yaml}\" README.md",
     "format:check": "prettier --check \"**/*.{ts,tsx,mts,css,json,mjs,yml,yaml}\" README.md",
     "test:rules": "node tests/rules/index.mjs",
+    "audit:contrast": "node scripts/contrast-audit.mjs",
     "emulators": "firebase emulators:start --project demo-collab-task --only auth,firestore,storage $([ -d ./.emulator-data ] && echo --import ./.emulator-data) --export-on-exit ./.emulator-data",
     "emulators:export": "firebase emulators:export ./.emulator-data --project demo-collab-task --force"
   },

@@ -202,7 +202,7 @@ export const TaskToolbar = ({
         <button
           type="button"
           onClick={() => onChange(CLEARED_FILTERS)}
-          className="text-caption text-ink-subtle hover:text-ink hover:bg-surface-3 inline-flex h-7 items-center gap-1 rounded-full px-2 font-medium transition-colors"
+          className="text-caption text-ink-subtle hover:text-ink hover:bg-hover inline-flex h-7 items-center gap-1 rounded-full px-2 font-medium transition-colors"
         >
           <X className="size-3.5" aria-hidden="true" />
           Clear

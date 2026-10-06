@@ -43,6 +43,7 @@ const COLORS = [
   "scrim",
   "panel",
   "column",
+  "hover",
 ];
 
 const FONT_SIZES = [

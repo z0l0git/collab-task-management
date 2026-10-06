@@ -68,7 +68,7 @@ export const BoardColumn = ({
             type="button"
             onClick={() => onCreate(status.id)}
             aria-label={`New ${name} task`}
-            className="text-ink-subtle hover:bg-surface-3 hover:text-ink ml-auto rounded-md p-1 transition-colors"
+            className="text-ink-subtle hover:bg-hover hover:text-ink ml-auto rounded-md p-1 transition-colors"
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>

@@ -31,7 +31,7 @@ import { useAttachments } from "./useAttachments";
 type Upload = { file: File; progress: number; error: string };
 
 const iconButton =
-  "text-ink-subtle hover:text-ink hover:bg-surface-4 rounded-sm p-1 transition-colors disabled:opacity-50";
+  "text-ink-subtle hover:text-ink hover:bg-hover rounded-sm p-1 transition-colors disabled:opacity-50";
 
 export const TaskAttachments = ({
   workspaceId,

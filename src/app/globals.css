@@ -30,6 +30,7 @@
   --accent-soft: #5058c4;
   --accent-soft-hover: #434aad;
   --focus-ring: #5e6ad2;
+  --hover: rgb(13 14 16 / 0.05);
 
   --success: #187633;
   --warning: #8b5d00;
@@ -86,6 +87,7 @@
   --accent-soft: #7882d9;
   --accent-soft-hover: #828fff;
   --focus-ring: #5e69d1;
+  --hover: rgb(247 248 248 / 0.06);
 
   --success: #27a644;
   --warning: #d9a441;
@@ -121,6 +123,7 @@
   --color-surface-3: var(--surface-3);
   --color-surface-4: var(--surface-4);
   --color-panel: var(--panel);
+  --color-hover: var(--hover);
   --color-column: var(--column);
 
   --color-hairline: var(--hairline);

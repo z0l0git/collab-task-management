@@ -110,7 +110,7 @@ export const LabelsPanel = ({ workspace }: { workspace: Workspace }) => {
                   type="button"
                   aria-label={`Remove label ${name}`}
                   onClick={() => void onRemove(name)}
-                  className="hover:bg-surface-3 hover:text-ink rounded-full p-0.5 transition-colors"
+                  className="hover:bg-hover hover:text-ink rounded-full p-0.5 transition-colors"
                 >
                   <X className="size-3" aria-hidden="true" />
                 </button>

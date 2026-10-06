@@ -2,7 +2,7 @@ import { ChevronRight, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 export const iconButtonClasses =
-  "text-ink-subtle hover:bg-surface-3 hover:text-ink rounded-md p-1.5 transition-colors";
+  "text-ink-subtle hover:bg-hover hover:text-ink rounded-md p-1.5 transition-colors";
 
 export const TaskDialogHeader = ({
   workspaceName,
