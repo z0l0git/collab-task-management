@@ -11,20 +11,14 @@ import { LabelPicker } from "./LabelPicker";
 import { PriorityIcon } from "./PriorityIcon";
 import { PropertyChip, PropertyDateChip } from "./PropertyChip";
 import { StatusIcon } from "./StatusIcon";
+import { statusById, statusOptions } from "./statuses";
 import {
   PRIORITY_LABELS,
-  STATUS_LABELS,
   TASK_PRIORITIES,
-  TASK_STATUSES,
   assigneeOf,
   type Task,
   type TaskInput,
 } from "./types";
-
-const STATUS_OPTIONS = TASK_STATUSES.map((value) => ({
-  value,
-  label: STATUS_LABELS[value],
-}));
 
 const PRIORITY_OPTIONS = TASK_PRIORITIES.map((value) => ({
   value,
@@ -68,6 +62,8 @@ export const TaskProperties = ({
   onSave: (fields: Partial<TaskInput>) => void;
 }) => {
   const assignee = assigneeOf(workspace.members, task.assigneeId);
+  const status = statusById(workspace.statuses, task.status);
+  const overdue = isOverdue(task, status?.done ?? false);
   const creator = assigneeOf(workspace.members, task.createdBy);
 
   const assigneeOptions = [
@@ -87,8 +83,8 @@ export const TaskProperties = ({
         <PropertyChip
           label="Status"
           value={task.status}
-          options={STATUS_OPTIONS}
-          icon={<StatusIcon status={task.status} />}
+          options={statusOptions(workspace.statuses, task.status)}
+          icon={<StatusIcon status={status} />}
           onChange={(status) => onSave({ status })}
         />
       </Property>
@@ -125,9 +121,9 @@ export const TaskProperties = ({
       </Property>
       <Property label="Due date">
         <PropertyDateChip
-          label={isOverdue(task) ? "Due date (overdue)" : "Due date"}
+          label={overdue ? "Due date (overdue)" : "Due date"}
           value={toDateInputValue(task.dueDate)}
-          danger={isOverdue(task)}
+          danger={overdue}
           onChange={(value) => onSave({ dueDate: fromDateInputValue(value) })}
         />
       </Property>

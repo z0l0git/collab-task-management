@@ -11,12 +11,17 @@ import {
 import { useState } from "react";
 
 import { moveTask } from "@/features/tasks/taskService";
-import type { Task, TaskStatus } from "@/features/tasks/types";
+import { statusById, type TaskStatus } from "@/features/tasks/statuses";
+import type { Task } from "@/features/tasks/types";
 import { toUserMessage } from "@/lib/firebase";
 
 import { planMove } from "./ordering";
 
-export const useBoardDrag = (workspaceId: string, tasks: Task[]) => {
+export const useBoardDrag = (
+  workspaceId: string,
+  tasks: Task[],
+  statuses: TaskStatus[],
+) => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -34,8 +39,8 @@ export const useBoardDrag = (workspaceId: string, tasks: Task[]) => {
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     setActiveId(null);
-    const status = over?.data.current?.status as TaskStatus | undefined;
-    if (!over || !status) return;
+    const status = over?.data.current?.status as string | undefined;
+    if (!over || !status || !statusById(statuses, status)) return;
 
     const dragged = active.rect.current.translated;
     const move = planMove(tasks, String(active.id), {

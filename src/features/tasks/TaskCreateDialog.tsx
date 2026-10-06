@@ -12,24 +12,17 @@ import { fromDateInputValue } from "./dueDate";
 import { LabelPicker } from "./LabelPicker";
 import { PriorityIcon } from "./PriorityIcon";
 import { PropertyChip, PropertyDateChip } from "./PropertyChip";
+import { statusById, statusOptions } from "./statuses";
 import { StatusIcon } from "./StatusIcon";
 import { TaskDialogHeader } from "./TaskDialogHeader";
 import { createTask } from "./taskService";
 import {
   PRIORITY_LABELS,
-  STATUS_LABELS,
   TASK_LIMITS,
   TASK_PRIORITIES,
-  TASK_STATUSES,
   assigneeOf,
   type TaskPriority,
-  type TaskStatus,
 } from "./types";
-
-const STATUS_OPTIONS = TASK_STATUSES.map((value) => ({
-  value,
-  label: STATUS_LABELS[value],
-}));
 
 const PRIORITY_OPTIONS = TASK_PRIORITIES.map((value) => ({
   value,
@@ -45,7 +38,7 @@ export const TaskCreateDialog = ({
   onClose,
 }: {
   workspace: Workspace;
-  initialStatus: TaskStatus;
+  initialStatus: string;
   onClose: () => void;
 }) => {
   const { user } = useAuth();
@@ -53,7 +46,7 @@ export const TaskCreateDialog = ({
   const headingId = useId();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<TaskStatus>(initialStatus);
+  const [status, setStatus] = useState(initialStatus);
   const [priority, setPriority] = useState<TaskPriority>("medium");
   const [assigneeId, setAssigneeId] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -189,8 +182,10 @@ export const TaskCreateDialog = ({
             variant="pill"
             label="Status"
             value={status}
-            options={STATUS_OPTIONS}
-            icon={<StatusIcon status={status} />}
+            options={statusOptions(workspace.statuses)}
+            icon={
+              <StatusIcon status={statusById(workspace.statuses, status)} />
+            }
             onChange={setStatus}
           />
           <PropertyChip

@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { myOpenTasks, taskStats } from "./taskStats";
+import { taskStats } from "./taskStats";
 import type { WorkspaceTasks } from "./useAllWorkspaceTasks";
 
 const Stat = ({
@@ -28,10 +28,12 @@ const Stat = ({
 export const WorkspaceInsights = ({
   state,
   uid,
+  doneIds,
   compact = false,
 }: {
   state: WorkspaceTasks;
   uid: string | undefined;
+  doneIds: Set<string>;
   compact?: boolean;
 }) => {
   if (state.status === "loading") {
@@ -47,13 +49,12 @@ export const WorkspaceInsights = ({
     return <span className="text-ink-subtle">Stats unavailable</span>;
   }
 
-  const stats = taskStats(state.tasks, uid);
+  const stats = taskStats(state.tasks, uid, doneIds);
   if (stats.total === 0) {
     return <span className="text-ink-subtle">No tasks yet</span>;
   }
 
-  const open = stats.todo + stats.inProgress;
-  const mine = myOpenTasks(state.tasks, uid).length;
+  const { open, mine } = stats;
   const done = Math.round((stats.done / stats.total) * 100);
 
   if (compact) {
@@ -87,7 +88,7 @@ export const WorkspaceInsights = ({
           className="bg-surface-4 h-1.5 w-16 overflow-hidden rounded-full"
         >
           <span
-            className="bg-status-done block h-full rounded-full"
+            className="bg-status-green block h-full rounded-full"
             style={{ width: `${done}%` }}
           />
         </span>

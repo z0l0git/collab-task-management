@@ -58,7 +58,14 @@ service cloud.firestore {
           && data.members is map
           && data.labels is list
           && data.labels.size() <= 50
+          && (!('statuses' in data) || validStatuses(data.statuses))
           && data.ownerId in data.memberIds;
+      }
+
+      function validStatuses(statuses) {
+        return statuses is map
+          && statuses.size() > 0
+          && statuses.size() <= 20;
       }
 
       function ownerUnchanged() {
@@ -73,7 +80,10 @@ service cloud.firestore {
           && request.resource.data.memberIds.size() ==
              resource.data.memberIds.size() - 1
           && request.resource.data.name == resource.data.name
-          && request.resource.data.description == resource.data.description;
+          && request.resource.data.description == resource.data.description
+          && request.resource.data.labels == resource.data.labels
+          && request.resource.data.get('statuses', null) ==
+             resource.data.get('statuses', null);
       }
 
       allow read: if isMember();
@@ -104,7 +114,13 @@ service cloud.firestore {
           return isSignedIn() && request.auth.uid in workspace().memberIds;
         }
 
-        function validTask(data, allowedAssignees, allowedLabels) {
+        function statusIds() {
+          return workspace().get('statuses',
+            {'todo': true, 'in_progress': true, 'done': true}).keys();
+        }
+
+        function validTask(data, allowedAssignees, allowedLabels,
+            allowedStatuses) {
           return data.keys().hasOnly(['title', 'description', 'status',
               'priority', 'assigneeId', 'dueDate', 'labels', 'order',
               'createdBy', 'createdAt', 'updatedAt'])
@@ -113,7 +129,8 @@ service cloud.firestore {
             && data.title.size() <= 200
             && data.description is string
             && data.description.size() <= 5000
-            && data.status in ['todo', 'in_progress', 'done']
+            && data.status is string
+            && data.status in allowedStatuses
             && data.priority in ['low', 'medium', 'high', 'urgent']
             && (data.assigneeId == null || data.assigneeId in allowedAssignees)
             && (data.dueDate == null || data.dueDate is timestamp)
@@ -128,7 +145,7 @@ service cloud.firestore {
 
         allow create: if isWorkspaceMember()
           && validTask(request.resource.data, workspace().memberIds,
-              workspace().labels)
+              workspace().labels, statusIds())
           && request.resource.data.createdBy == request.auth.uid
           && request.resource.data.createdAt == request.time
           && request.resource.data.updatedAt == request.time;
@@ -136,7 +153,8 @@ service cloud.firestore {
         allow update: if isWorkspaceMember()
           && validTask(request.resource.data,
               workspace().memberIds.concat([resource.data.assigneeId]),
-              workspace().labels.concat(resource.data.labels))
+              workspace().labels.concat(resource.data.labels),
+              statusIds().concat([resource.data.status]))
           && request.resource.data.createdBy == resource.data.createdBy
           && request.resource.data.createdAt == resource.data.createdAt
           && request.resource.data.updatedAt == request.time;

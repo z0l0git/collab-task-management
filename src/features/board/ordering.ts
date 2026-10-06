@@ -1,8 +1,8 @@
-import type { Task, TaskStatus } from "@/features/tasks/types";
+import type { Task } from "@/features/tasks/types";
 
 const GAP = 1024;
 
-export const columnTasks = (tasks: Task[], status: TaskStatus) =>
+export const columnTasks = (tasks: Task[], status: string) =>
   tasks
     .filter((task) => task.status === status)
     .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
@@ -15,7 +15,7 @@ export const orderBetween = (before?: number, after?: number) => {
 };
 
 export type DropTarget = {
-  status: TaskStatus;
+  status: string;
   overId: string | null;
   below: boolean;
 };
@@ -24,7 +24,7 @@ export const planMove = (
   tasks: Task[],
   activeId: string,
   { status, overId, below }: DropTarget,
-): { status: TaskStatus; order: number } | null => {
+): { status: string; order: number } | null => {
   const column = columnTasks(tasks, status);
   const ids = column.map((task) => task.id);
   const others = column.filter((task) => task.id !== activeId);

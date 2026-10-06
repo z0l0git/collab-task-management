@@ -1,4 +1,4 @@
-import { call, profile, signIn } from "./helpers.mjs";
+import { call, profile, signIn, statusMap } from "./helpers.mjs";
 
 const memberEntry = (uid, ownerUid) => [
   uid,
@@ -68,6 +68,29 @@ export const run = async () => {
       },
     },
   });
+
+  await call("DELETE", "/workspaces/ws-new", { token: "owner" });
+
+  const statusesId = "ws-statuses";
+  await call("PATCH", `/workspaces/${statusesId}`, {
+    token: "owner",
+    body: {
+      fields: {
+        ...existing(owner.uid, members).fields,
+        updatedAt: { timestampValue: "2026-01-01T00:00:00Z" },
+      },
+    },
+  });
+  const updateStatuses = (token, body) => ({
+    path: `/workspaces/${statusesId}`,
+    token,
+    body,
+    serverTimestamps: ["updatedAt"],
+  });
+  const customStatuses = statusMap([
+    ["backlog", "Backlog", false],
+    ["shipped", "Shipped", true],
+  ]);
 
   const update = (token, body) => ({
     path: `/workspaces/${id}`,
@@ -195,6 +218,54 @@ export const run = async () => {
         "/workspaces/blank",
         outsider.idToken,
         workspace(outsider.uid, [outsider.uid], { name: { stringValue: "" } }),
+      ),
+    ],
+
+    [
+      "CONTROL: the owner can set custom statuses",
+      200,
+      updateStatuses(
+        owner.idToken,
+        existing(owner.uid, members, { statuses: customStatuses }),
+      ),
+    ],
+    [
+      "a member cannot change the statuses",
+      403,
+      updateStatuses(
+        guest.idToken,
+        existing(owner.uid, members, {
+          statuses: statusMap([["mine", "Mine", false]]),
+        }),
+      ),
+    ],
+    [
+      "the owner cannot remove every status",
+      403,
+      updateStatuses(
+        owner.idToken,
+        existing(owner.uid, members, { statuses: { mapValue: {} } }),
+      ),
+    ],
+    [
+      "a member leaving cannot change the statuses",
+      403,
+      updateStatuses(
+        guest.idToken,
+        existing(owner.uid, [owner.uid], {
+          statuses: statusMap([["mine", "Mine", false]]),
+        }),
+      ),
+    ],
+    [
+      "a member leaving cannot change the labels",
+      403,
+      updateStatuses(
+        guest.idToken,
+        existing(owner.uid, [owner.uid], {
+          statuses: customStatuses,
+          labels: { arrayValue: { values: [{ stringValue: "sneaky" }] } },
+        }),
       ),
     ],
   ];
