@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 
 import { Button, Input, Modal, Textarea } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
@@ -22,6 +22,7 @@ export const CreateWorkspaceDialog = ({
   const [nameError, setNameError] = useState("");
   const [formError, setFormError] = useState("");
   const [pending, setPending] = useState(false);
+  const formId = useId();
 
   const close = () => {
     setName("");
@@ -65,13 +66,13 @@ export const CreateWorkspaceDialog = ({
           <Button variant="ghost" onClick={close} disabled={pending}>
             Cancel
           </Button>
-          <Button form="create-workspace" type="submit" isLoading={pending}>
+          <Button form={formId} type="submit" isLoading={pending}>
             Create workspace
           </Button>
         </>
       }
     >
-      <form id="create-workspace" onSubmit={onSubmit} className="space-y-4">
+      <form id={formId} onSubmit={onSubmit} className="space-y-4">
         <Input
           label="Name"
           value={name}
