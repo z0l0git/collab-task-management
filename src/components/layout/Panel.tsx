@@ -27,7 +27,7 @@ export const PanelHeader = ({
         type="button"
         onClick={openNav}
         aria-label="Open navigation"
-        className="text-ink-subtle hover:text-ink hover:bg-surface-2 rounded-md p-1.5 lg:hidden"
+        className="text-ink-subtle hover:text-ink hover:bg-hover rounded-md p-1.5 lg:hidden"
       >
         <MenuIcon className="size-4" aria-hidden="true" />
       </button>

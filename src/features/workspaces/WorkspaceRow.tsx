@@ -23,7 +23,7 @@ export const WorkspaceRow = ({
     <li>
       <Link
         href={`/workspaces/${workspace.id}`}
-        className="hover:bg-surface-3 flex min-h-14 items-center gap-3 px-4 py-2.5 transition-colors"
+        className="hover:bg-hover flex min-h-14 items-center gap-3 px-4 py-2.5 transition-colors"
       >
         <WorkspaceTile name={workspace.name} size={32} />
         <span className="min-w-0 flex-1">

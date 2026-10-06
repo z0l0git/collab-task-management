@@ -9,7 +9,7 @@ const VARIANTS = {
     "bg-accent text-on-accent hover:bg-accent-fill-hover active:bg-accent-fill-active disabled:hover:bg-accent",
   secondary:
     "bg-surface-1 text-ink border border-hairline hover:bg-surface-2 hover:border-hairline-strong disabled:hover:bg-surface-1",
-  ghost: "text-ink-subtle hover:bg-surface-1 hover:text-ink",
+  ghost: "text-ink-subtle hover:bg-hover hover:text-ink",
   danger:
     "bg-danger-solid text-on-danger hover:bg-danger-solid-hover disabled:hover:bg-danger-solid",
 } as const;

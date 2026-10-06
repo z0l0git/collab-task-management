@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { TASK_LIMITS, type TaskInput } from "./types";
 
 const fieldClasses =
-  "field-sizing-content -mx-2 w-[calc(100%+1rem)] resize-none rounded-md bg-transparent px-2 outline-none transition-colors placeholder:text-ink-subtle hover:bg-ink/4 focus-visible:ring-accent-focus focus-visible:ring-1";
+  "field-sizing-content -mx-2 w-[calc(100%+1rem)] resize-none rounded-md bg-transparent px-2 outline-none transition-colors placeholder:text-ink-subtle hover:bg-hover focus-visible:ring-accent-focus focus-visible:ring-1";
 
 const useInlineDraft = (value: string, commit: (draft: string) => string) => {
   const [draft, setDraft] = useState(value);

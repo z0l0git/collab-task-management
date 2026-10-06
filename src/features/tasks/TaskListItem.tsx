@@ -34,7 +34,7 @@ export const TaskListItem = memo(
         <button
           type="button"
           onClick={() => onOpen(task.id)}
-          className="hover:bg-surface-3 flex h-10 w-full items-center gap-3 px-4 text-left transition-colors"
+          className="hover:bg-hover flex h-10 w-full items-center gap-3 px-4 text-left transition-colors"
         >
           <PriorityIcon priority={task.priority} />
           <StatusIcon status={status} />

@@ -33,7 +33,7 @@ const COLOR_OPTIONS = STATUS_COLORS.map((value) => ({
 }));
 
 const iconButton =
-  "text-ink-subtle hover:bg-surface-3 hover:text-ink rounded-md p-1.5 transition-colors disabled:pointer-events-none disabled:opacity-40";
+  "text-ink-subtle hover:bg-hover hover:text-ink rounded-md p-1.5 transition-colors disabled:pointer-events-none disabled:opacity-40";
 
 const nameTaken = (statuses: TaskStatus[], name: string, exceptId?: string) =>
   statuses.some(

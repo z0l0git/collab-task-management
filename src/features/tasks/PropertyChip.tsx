@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 type Variant = "row" | "pill";
 
 const baseClasses =
-  "text-ink hover:bg-surface-3 focus-visible:ring-accent-focus min-w-0 cursor-pointer appearance-none truncate outline-none transition-colors focus-visible:ring-2";
+  "text-ink hover:bg-hover focus-visible:ring-accent-focus min-w-0 cursor-pointer appearance-none truncate outline-none transition-colors focus-visible:ring-2";
 
 const VARIANTS: Record<Variant, { wrapper: string; control: string }> = {
   row: {
@@ -130,7 +130,7 @@ export const PropertyDateChip = ({
           type="button"
           onClick={() => commit("")}
           aria-label="Clear date"
-          className="text-ink-subtle hover:text-ink hover:bg-surface-4 absolute top-1/2 right-1 -translate-y-1/2 rounded-sm p-1"
+          className="text-ink-subtle hover:text-ink hover:bg-hover absolute top-1/2 right-1 -translate-y-1/2 rounded-sm p-1"
         >
           <X className="size-3" aria-hidden="true" />
         </button>
