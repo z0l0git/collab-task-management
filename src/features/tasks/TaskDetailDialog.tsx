@@ -4,18 +4,19 @@ import { Check, Link2, MoreHorizontal, Trash2 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import { Button, Menu, MenuItem, Modal } from "@/components/ui";
+import { AttachmentsUnavailable } from "@/features/attachments/AttachmentsUnavailable";
 import { TaskAttachments } from "@/features/attachments/TaskAttachments";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { TaskComments } from "@/features/comments/TaskComments";
-import { isOwner, type Workspace } from "@/features/workspaces/types";
-import { toUserMessage } from "@/lib/firebase";
+import { attachmentsEnabled, toUserMessage } from "@/lib/firebase";
+import { deleteTask } from "@/services/taskService";
+import type { Task, TaskInput } from "@/types/task";
+import { isOwner, type Workspace } from "@/types/workspace";
 
 import { InlineDescription, InlineTitle } from "./InlineTaskFields";
 import { iconButtonClasses, TaskDialogHeader } from "./TaskDialogHeader";
-import { deleteTask } from "./taskService";
 import { TaskProperties } from "./TaskProperties";
-import type { Task, TaskInput } from "./types";
-import { useTaskAutosave, type SaveStatus } from "./useTaskAutosave";
+import { useTaskAutosave, type SaveStatus } from "./hooks/useTaskAutosave";
 
 const SAVE_LABELS: Record<SaveStatus, string> = {
   idle: "",
@@ -183,7 +184,11 @@ export const TaskDetailDialog = ({
             </p>
           ) : null}
           <div className="border-hairline space-y-6 border-t pt-6">
-            <TaskAttachments workspaceId={workspace.id} taskId={current.id} />
+            {attachmentsEnabled ? (
+              <TaskAttachments workspaceId={workspace.id} taskId={current.id} />
+            ) : (
+              <AttachmentsUnavailable />
+            )}
             <TaskComments workspace={workspace} taskId={current.id} />
           </div>
         </div>

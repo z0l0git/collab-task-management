@@ -13,9 +13,8 @@ import {
   Textarea,
 } from "@/components/ui";
 import { toUserMessage } from "@/lib/firebase";
-
-import { updateWorkspace } from "./workspaceService";
-import type { Workspace } from "./types";
+import { updateWorkspace } from "@/services/workspaceService";
+import type { Workspace } from "@/types/workspace";
 
 export const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
   const [name, setName] = useState(workspace.name);

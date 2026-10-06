@@ -12,21 +12,21 @@ import { useRef, useState, type ChangeEvent } from "react";
 import { Button, Spinner } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { toUserMessage } from "@/lib/firebase";
-
 import {
   attachmentUrl,
   deleteAttachment,
   uploadAttachment,
-} from "./attachmentService";
-import { AttachmentThumbnail } from "./AttachmentThumbnail";
+} from "@/services/attachmentService";
 import {
   ATTACHMENT_ACCEPT,
   formatBytes,
   isImageAttachment,
   validateAttachment,
   type Attachment,
-} from "./types";
-import { useAttachments } from "./useAttachments";
+} from "@/types/attachment";
+
+import { AttachmentThumbnail } from "./AttachmentThumbnail";
+import { useAttachments } from "./hooks/useAttachments";
 
 type Upload = { file: File; progress: number; error: string };
 

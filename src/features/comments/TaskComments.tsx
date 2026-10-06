@@ -5,12 +5,12 @@ import { useState, type FormEvent, type KeyboardEvent } from "react";
 
 import { Button, Spinner, Textarea } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
-import type { Workspace } from "@/features/workspaces/types";
 import { toUserMessage } from "@/lib/firebase";
+import { addComment, deleteComment } from "@/services/commentService";
+import { COMMENT_MAX_LENGTH, type Comment } from "@/types/comment";
+import type { Workspace } from "@/types/workspace";
 
-import { addComment, deleteComment } from "./commentService";
-import { COMMENT_MAX_LENGTH, type Comment } from "./types";
-import { useComments } from "./useComments";
+import { useComments } from "./hooks/useComments";
 
 const timeFormat = new Intl.DateTimeFormat(undefined, {
   month: "short",

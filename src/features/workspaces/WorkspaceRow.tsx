@@ -4,10 +4,10 @@ import { Users } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui";
-import { useTaskCounts } from "@/features/dashboard/useTaskCounts";
+import { useTaskCounts } from "@/features/dashboard/hooks/useTaskCounts";
 import { WorkspaceInsights } from "@/features/dashboard/WorkspaceInsights";
+import type { Workspace } from "@/types/workspace";
 
-import type { Workspace } from "./types";
 import { WorkspaceTile } from "./WorkspaceTile";
 
 export const WorkspaceRow = ({

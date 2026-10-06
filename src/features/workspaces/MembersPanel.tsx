@@ -16,9 +16,8 @@ import {
 } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { toUserMessage } from "@/lib/firebase";
-
-import { addMemberByEmail, removeMember } from "./workspaceService";
-import { isOwner, memberList, type Workspace } from "./types";
+import { addMemberByEmail, removeMember } from "@/services/workspaceService";
+import { isOwner, memberList, type Workspace } from "@/types/workspace";
 
 export const MembersPanel = ({ workspace }: { workspace: Workspace }) => {
   const { user } = useAuth();

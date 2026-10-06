@@ -3,8 +3,7 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 
 import { cn } from "@/lib/utils";
-
-import { TASK_LIMITS, type TaskInput } from "./types";
+import { TASK_LIMITS, type TaskInput } from "@/types/task";
 
 const fieldClasses =
   "field-sizing-content -mx-2 w-[calc(100%+1rem)] resize-none rounded-md bg-transparent px-2 outline-none transition-colors placeholder:text-ink-subtle hover:bg-hover focus-visible:ring-accent-focus focus-visible:ring-1";

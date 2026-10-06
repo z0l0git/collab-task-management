@@ -3,8 +3,7 @@
 import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-
-import { TASK_LIMITS } from "./types";
+import { TASK_LIMITS } from "@/types/task";
 
 export const LabelPicker = ({
   options,

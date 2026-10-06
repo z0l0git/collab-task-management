@@ -12,10 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-import type { Workspace } from "@/features/workspaces/types";
 import { cn } from "@/lib/utils";
-
-import { PropertyChip } from "./PropertyChip";
 import {
   activeFilterCount,
   CLEARED_FILTERS,
@@ -26,8 +23,11 @@ import {
   UNASSIGNED,
   type TaskFilters,
   type TaskSort,
-} from "./taskFilters";
-import { PRIORITY_LABELS, TASK_PRIORITIES } from "./types";
+} from "@/lib/utils/taskFilters";
+import { PRIORITY_LABELS, TASK_PRIORITIES } from "@/types/task";
+import type { Workspace } from "@/types/workspace";
+
+import { PropertyChip } from "./PropertyChip";
 
 type FilterUpdates = Partial<Record<keyof TaskFilters | "sort", string | null>>;
 

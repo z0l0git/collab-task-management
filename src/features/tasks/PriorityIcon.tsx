@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-
-import { PRIORITY_LABELS, type TaskPriority } from "./types";
+import { PRIORITY_LABELS, type TaskPriority } from "@/types/task";
 
 const FILLED_BARS: Record<Exclude<TaskPriority, "urgent">, number> = {
   low: 1,

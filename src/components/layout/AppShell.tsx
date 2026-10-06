@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { useWorkspaces } from "@/features/workspaces/useWorkspaces";
+import { useWorkspaces } from "@/features/workspaces/hooks/useWorkspaces";
 
 import { Sidebar } from "./Sidebar";
 

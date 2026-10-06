@@ -4,8 +4,8 @@ import { ArrowLeft, Gauge, Settings, SquareKanban } from "lucide-react";
 import { useParams } from "next/navigation";
 import type { ReactNode } from "react";
 
-import type { Workspace } from "@/features/workspaces/types";
 import { WorkspaceTile } from "@/features/workspaces/WorkspaceTile";
+import type { Workspace } from "@/types/workspace";
 
 import { NavItem } from "./NavItem";
 import { UserMenu } from "./UserMenu";

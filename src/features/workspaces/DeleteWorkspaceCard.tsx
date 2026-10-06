@@ -14,9 +14,8 @@ import {
   Modal,
 } from "@/components/ui";
 import { toUserMessage } from "@/lib/firebase";
-
-import type { Workspace } from "./types";
-import { deleteWorkspace } from "./workspaceService";
+import { deleteWorkspace } from "@/services/workspaceService";
+import type { Workspace } from "@/types/workspace";
 
 export const DeleteWorkspaceCard = ({
   workspace,

@@ -5,24 +5,24 @@ import { useId, useState, type FormEvent } from "react";
 
 import { Avatar, Button, Modal } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { memberList, type Workspace } from "@/features/workspaces/types";
 import { toUserMessage } from "@/lib/firebase";
-
-import { fromDateInputValue } from "./dueDate";
-import { LabelPicker } from "./LabelPicker";
-import { PriorityIcon } from "./PriorityIcon";
-import { PropertyChip, PropertyDateChip } from "./PropertyChip";
-import { statusById, statusOptions } from "./statuses";
-import { StatusIcon } from "./StatusIcon";
-import { TaskDialogHeader } from "./TaskDialogHeader";
-import { createTask } from "./taskService";
+import { fromDateInputValue } from "@/lib/utils/dueDate";
+import { statusById, statusOptions } from "@/lib/utils/statuses";
+import { createTask } from "@/services/taskService";
 import {
   PRIORITY_LABELS,
   TASK_LIMITS,
   TASK_PRIORITIES,
   assigneeOf,
   type TaskPriority,
-} from "./types";
+} from "@/types/task";
+import { memberList, type Workspace } from "@/types/workspace";
+
+import { LabelPicker } from "./LabelPicker";
+import { PriorityIcon } from "./PriorityIcon";
+import { PropertyChip, PropertyDateChip } from "./PropertyChip";
+import { StatusIcon } from "./StatusIcon";
+import { TaskDialogHeader } from "./TaskDialogHeader";
 
 const PRIORITY_OPTIONS = TASK_PRIORITIES.map((value) => ({
   value,

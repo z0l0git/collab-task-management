@@ -6,13 +6,13 @@ import { useState, type FormEvent } from "react";
 
 import { Button, Input } from "@/components/ui";
 import { toUserMessage } from "@/lib/firebase";
-
-import { GoogleButton } from "./GoogleButton";
 import {
   signInWithEmail,
   signInWithGoogle,
   signUpWithEmail,
-} from "./authService";
+} from "@/services/authService";
+
+import { GoogleButton } from "./GoogleButton";
 
 type Mode = "login" | "signup";
 

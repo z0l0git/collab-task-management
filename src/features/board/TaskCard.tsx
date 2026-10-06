@@ -1,11 +1,11 @@
 import { Calendar } from "lucide-react";
 
 import { Avatar, Badge } from "@/components/ui";
-import { formatDueDate, isOverdue } from "@/features/tasks/dueDate";
 import { PriorityIcon } from "@/features/tasks/PriorityIcon";
-import type { TaskStatus } from "@/features/tasks/statuses";
-import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
+import { formatDueDate, isOverdue } from "@/lib/utils/dueDate";
+import type { TaskStatus } from "@/lib/utils/statuses";
+import type { Assignee, Task } from "@/types/task";
 
 const MAX_LABELS = 2;
 

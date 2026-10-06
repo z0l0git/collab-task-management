@@ -3,14 +3,14 @@
 import { closestCorners, DndContext, DragOverlay } from "@dnd-kit/core";
 import { useMemo } from "react";
 
-import { statusById } from "@/features/tasks/statuses";
-import { assigneeOf, type Task } from "@/features/tasks/types";
-import type { Workspace } from "@/features/workspaces/types";
+import { columnTasks } from "@/lib/utils/ordering";
+import { statusById } from "@/lib/utils/statuses";
+import { assigneeOf, type Task } from "@/types/task";
+import type { Workspace } from "@/types/workspace";
 
 import { BoardColumn } from "./BoardColumn";
-import { columnTasks } from "./ordering";
 import { TaskCard } from "./TaskCard";
-import { useBoardDrag } from "./useBoardDrag";
+import { useBoardDrag } from "./hooks/useBoardDrag";
 
 const NO_STATUS_KEY = "no-status";
 
