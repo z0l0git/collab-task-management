@@ -15,7 +15,7 @@ import type { TaskInput } from "./types";
 export const tasksRef = (workspaceId: string) =>
   collection(getFirebaseDb(), "workspaces", workspaceId, "tasks");
 
-const taskRef = (workspaceId: string, taskId: string) =>
+export const taskRef = (workspaceId: string, taskId: string) =>
   doc(getFirebaseDb(), "workspaces", workspaceId, "tasks", taskId);
 
 const toFields = (input: TaskInput) => ({

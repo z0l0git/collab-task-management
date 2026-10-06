@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Settings, SquareKanban } from "lucide-react";
+import { ArrowLeft, Gauge, Settings, SquareKanban } from "lucide-react";
 import { useParams } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -45,6 +45,9 @@ export const Sidebar = ({ workspaces }: { workspaces: Workspace[] }) => {
         {current ? (
           <>
             <Section>
+              <NavItem href={`/workspaces/${current.id}/overview`} icon={Gauge}>
+                Overview
+              </NavItem>
               <NavItem href={`/workspaces/${current.id}`} icon={SquareKanban}>
                 Tasks
               </NavItem>

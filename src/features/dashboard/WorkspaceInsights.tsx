@@ -3,8 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { taskStats } from "./taskStats";
-import type { WorkspaceTasks } from "./useAllWorkspaceTasks";
+import type { TaskCountsState } from "./useTaskCounts";
 
 const Stat = ({
   icon: Icon,
@@ -27,13 +26,9 @@ const Stat = ({
 
 export const WorkspaceInsights = ({
   state,
-  uid,
-  doneIds,
   compact = false,
 }: {
-  state: WorkspaceTasks;
-  uid: string | undefined;
-  doneIds: Set<string>;
+  state: TaskCountsState;
   compact?: boolean;
 }) => {
   if (state.status === "loading") {
@@ -49,7 +44,7 @@ export const WorkspaceInsights = ({
     return <span className="text-ink-subtle">Stats unavailable</span>;
   }
 
-  const stats = taskStats(state.tasks, uid, doneIds);
+  const stats = state.counts;
   if (stats.total === 0) {
     return <span className="text-ink-subtle">No tasks yet</span>;
   }

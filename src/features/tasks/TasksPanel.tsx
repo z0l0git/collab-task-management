@@ -1,9 +1,9 @@
 "use client";
 
-import { Columns3, List, ListTodo, Plus } from "lucide-react";
+import { Columns3, List, ListTodo, Plus, SearchX } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { Button, EmptyState, Spinner } from "@/components/ui";
@@ -11,8 +11,18 @@ import { useCurrentWorkspace } from "@/features/workspaces/WorkspaceProvider";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/lib/utils";
 
+import { LoadMoreTasks } from "./LoadMoreTasks";
+import { doneStatusIds, statusById } from "./statuses";
+import {
+  activeFilterCount,
+  CLEARED_FILTERS,
+  filterTasks,
+  parseFilters,
+  parseSort,
+} from "./taskFilters";
 import { TaskList } from "./TaskList";
-import { statusById } from "./statuses";
+import { TaskToolbar } from "./TaskToolbar";
+import { useTask } from "./useTask";
 import { useTasks } from "./useTasks";
 
 const BoardView = dynamic(
@@ -44,8 +54,21 @@ type View = (typeof VIEWS)[number]["value"];
 
 export const TasksPanel = () => {
   const workspace = useCurrentWorkspace();
-  const { tasks, loading, error } = useTasks(workspace.id);
+  const { tasks, loading, error, hasMore, loadingMore, loadMore } = useTasks(
+    workspace.id,
+  );
   const { searchParams, setParams } = useQueryParams();
+  const filters = useMemo(() => parseFilters(searchParams), [searchParams]);
+  const sort = parseSort(searchParams);
+  const filtering = activeFilterCount(filters) > 0;
+  const doneIds = useMemo(
+    () => doneStatusIds(workspace.statuses),
+    [workspace.statuses],
+  );
+  const visibleTasks = useMemo(
+    () => filterTasks(tasks, filters, { doneIds }),
+    [tasks, filters, doneIds],
+  );
   const view: View = searchParams.get("view") === "list" ? "list" : "board";
   const setView = (next: View) =>
     setParams({ view: next === "board" ? null : next });
@@ -55,13 +78,18 @@ export const TasksPanel = () => {
 
   const taskId = searchParams.get("task");
   const creating = taskId === "new";
-  const statusParam = searchParams.get("status");
+  const columnParam = searchParams.get("column");
   const initialStatus =
-    statusParam && statusById(workspace.statuses, statusParam)
-      ? statusParam
+    columnParam && statusById(workspace.statuses, columnParam)
+      ? columnParam
       : (workspace.statuses[0]?.id ?? "todo");
-  const openTask =
+  const loadedTask =
     taskId && !creating ? tasks.find((task) => task.id === taskId) : undefined;
+  const linkedTask = useTask(
+    workspace.id,
+    taskId && !creating && !loading && !loadedTask ? taskId : null,
+  );
+  const openTask = loadedTask ?? linkedTask.task;
 
   const openDialog = useCallback(
     (params: Record<string, string>) => {
@@ -82,13 +110,15 @@ export const TasksPanel = () => {
 
   const onCreateTask = useCallback(
     (status?: string) =>
-      openDialog(status ? { task: "new", status } : { task: "new" }),
+      openDialog(status ? { task: "new", column: status } : { task: "new" }),
     [openDialog],
   );
 
+  const clearFilters = () => setParams(CLEARED_FILTERS);
+
   const onCloseDialog = () => {
     if (openedHereRef.current) router.back();
-    else setParams({ task: null, status: null });
+    else setParams({ task: null, column: null });
   };
 
   useEffect(() => {
@@ -141,11 +171,25 @@ export const TasksPanel = () => {
             ))}
           </div>
           {tasks.length > 0 ? (
-            <p className="text-caption text-ink-subtle">
-              {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
+            <p className="text-caption text-ink-subtle tabular-nums">
+              {filtering ? `${visibleTasks.length} of ` : ""}
+              {tasks.length}
+              {hasMore ? "+" : ""} {tasks.length === 1 ? "task" : "tasks"}
             </p>
           ) : null}
         </div>
+
+        {tasks.length > 0 || filtering ? (
+          <div className="mt-3">
+            <TaskToolbar
+              workspace={workspace}
+              filters={filters}
+              sort={sort}
+              showSort={view === "list"}
+              onChange={setParams}
+            />
+          </div>
+        ) : null}
 
         <div className="mt-4">
           {loading ? (
@@ -159,28 +203,52 @@ export const TasksPanel = () => {
             >
               {error}
             </p>
-          ) : tasks.length === 0 ? (
+          ) : tasks.length === 0 && !filtering ? (
             <EmptyState
               icon={ListTodo}
               title="No tasks yet"
               description="Create the first task for this workspace."
               action={<Button onClick={() => onCreateTask()}>New task</Button>}
             />
+          ) : visibleTasks.length === 0 ? (
+            <EmptyState
+              icon={SearchX}
+              title="No matching tasks"
+              description={
+                hasMore
+                  ? `None of the ${tasks.length} newest tasks match. Load more to search older ones, or clear the filters.`
+                  : "No task matches these filters. Try removing one."
+              }
+              action={
+                <Button variant="secondary" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              }
+            />
           ) : view === "board" ? (
             <BoardView
               workspace={workspace}
-              tasks={tasks}
+              tasks={visibleTasks}
               onOpen={onOpenTask}
               onCreate={onCreateTask}
             />
           ) : (
             <TaskList
-              tasks={tasks}
+              tasks={visibleTasks}
               members={workspace.members}
               statuses={workspace.statuses}
+              sort={sort}
               onOpen={onOpenTask}
             />
           )}
+          {!loading && !error && hasMore ? (
+            <LoadMoreTasks
+              loaded={tasks.length}
+              loading={loadingMore}
+              auto={view === "list" && !filtering}
+              onLoadMore={loadMore}
+            />
+          ) : null}
         </div>
 
         {creating ? (
@@ -190,7 +258,7 @@ export const TasksPanel = () => {
             initialStatus={initialStatus}
             onClose={onCloseDialog}
           />
-        ) : taskId && !loading ? (
+        ) : taskId && !loading && !linkedTask.loading ? (
           <TaskDetailDialog
             key={taskId}
             workspace={workspace}

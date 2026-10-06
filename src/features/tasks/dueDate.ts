@@ -16,7 +16,7 @@ export const fromDateInputValue = (value: string) => {
   return new Date(year, month - 1, day);
 };
 
-const startOfToday = () => {
+export const startOfToday = () => {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 };

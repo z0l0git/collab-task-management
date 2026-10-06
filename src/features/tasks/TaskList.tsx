@@ -2,11 +2,11 @@
 
 import { useMemo } from "react";
 
-import { columnTasks } from "@/features/board/ordering";
 import type { Workspace } from "@/features/workspaces/types";
 
 import { statusById, type TaskStatus } from "./statuses";
 import { StatusIcon } from "./StatusIcon";
+import { sortTasks, type TaskSort } from "./taskFilters";
 import { TaskListItem } from "./TaskListItem";
 import { assigneeOf, type Task } from "./types";
 
@@ -14,11 +14,13 @@ export const TaskList = ({
   tasks,
   members,
   statuses,
+  sort,
   onOpen,
 }: {
   tasks: Task[];
   members: Workspace["members"];
   statuses: TaskStatus[];
+  sort: TaskSort;
   onOpen: (taskId: string) => void;
 }) => {
   const groups = useMemo(() => {
@@ -27,17 +29,21 @@ export const TaskList = ({
       ...statuses.map((status) => ({
         key: status.id,
         status: status as TaskStatus | undefined,
-        items: columnTasks(tasks, status.id),
+        items: sortTasks(
+          tasks.filter((task) => task.status === status.id),
+          sort,
+        ),
       })),
       {
         key: "no-status",
         status: undefined,
-        items: tasks
-          .filter((task) => !known.has(task.status))
-          .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id)),
+        items: sortTasks(
+          tasks.filter((task) => !known.has(task.status)),
+          sort,
+        ),
       },
     ].filter((group) => group.items.length > 0);
-  }, [tasks, statuses]);
+  }, [tasks, statuses, sort]);
 
   return (
     <div className="border-hairline overflow-clip rounded-lg border">
