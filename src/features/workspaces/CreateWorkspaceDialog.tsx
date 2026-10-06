@@ -6,8 +6,7 @@ import { useState, type FormEvent } from "react";
 import { Button, Input, Modal, Textarea } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { toUserMessage } from "@/lib/firebase";
-
-import { createWorkspace } from "./workspaceService";
+import { createWorkspace } from "@/services/workspaceService";
 
 export const CreateWorkspaceDialog = ({
   open,

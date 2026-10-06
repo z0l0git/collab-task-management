@@ -8,7 +8,7 @@ import { Button, EmptyState, Spinner } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
 
 import { CreateWorkspaceDialog } from "./CreateWorkspaceDialog";
-import { useWorkspaces } from "./useWorkspaces";
+import { useWorkspaces } from "./hooks/useWorkspaces";
 import { WorkspaceRow } from "./WorkspaceRow";
 
 export const WorkspaceList = () => {

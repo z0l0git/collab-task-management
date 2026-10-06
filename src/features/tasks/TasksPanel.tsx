@@ -10,20 +10,20 @@ import { Button, EmptyState, Spinner } from "@/components/ui";
 import { useCurrentWorkspace } from "@/features/workspaces/WorkspaceProvider";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/lib/utils";
-
-import { LoadMoreTasks } from "./LoadMoreTasks";
-import { doneStatusIds, statusById } from "./statuses";
+import { doneStatusIds, statusById } from "@/lib/utils/statuses";
 import {
   activeFilterCount,
   CLEARED_FILTERS,
   filterTasks,
   parseFilters,
   parseSort,
-} from "./taskFilters";
+} from "@/lib/utils/taskFilters";
+
+import { LoadMoreTasks } from "./LoadMoreTasks";
 import { TaskList } from "./TaskList";
 import { TaskToolbar } from "./TaskToolbar";
-import { useTask } from "./useTask";
-import { useTasks } from "./useTasks";
+import { useTask } from "./hooks/useTask";
+import { useTasks } from "./hooks/useTasks";
 
 const BoardView = dynamic(
   () => import("@/features/board/BoardView").then((module) => module.BoardView),

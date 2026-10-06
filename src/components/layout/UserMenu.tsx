@@ -11,7 +11,7 @@ import {
   MenuLabel,
 } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { signOut } from "@/features/auth/authService";
+import { signOut } from "@/services/authService";
 
 export const UserMenu = () => {
   const { user } = useAuth();

@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import type { TaskCountsState } from "./useTaskCounts";
+import type { TaskCountsState } from "./hooks/useTaskCounts";
 
 const Stat = ({
   icon: Icon,

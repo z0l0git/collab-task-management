@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { formatBytes, type Attachment } from "@/types/attachment";
 
-import { formatBytes, type Attachment } from "./types";
-import { useAttachmentUrl } from "./useAttachmentUrl";
+import { useAttachmentUrl } from "./hooks/useAttachmentUrl";
 
 export const AttachmentThumbnail = ({
   attachment,

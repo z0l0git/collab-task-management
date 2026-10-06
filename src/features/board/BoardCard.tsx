@@ -4,9 +4,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { memo } from "react";
 
-import type { TaskStatus } from "@/features/tasks/statuses";
-import type { Assignee, Task } from "@/features/tasks/types";
 import { cn } from "@/lib/utils";
+import type { TaskStatus } from "@/lib/utils/statuses";
+import type { Assignee, Task } from "@/types/task";
 
 import { TaskCard } from "./TaskCard";
 

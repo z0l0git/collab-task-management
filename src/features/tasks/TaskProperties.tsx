@@ -4,22 +4,26 @@ import { UserRound } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Avatar } from "@/components/ui";
-import { memberList, type Workspace } from "@/features/workspaces/types";
 import { cn } from "@/lib/utils";
-
-import { fromDateInputValue, isOverdue, toDateInputValue } from "./dueDate";
-import { LabelPicker } from "./LabelPicker";
-import { PriorityIcon } from "./PriorityIcon";
-import { PropertyChip, PropertyDateChip } from "./PropertyChip";
-import { StatusIcon } from "./StatusIcon";
-import { statusById, statusOptions } from "./statuses";
+import {
+  fromDateInputValue,
+  isOverdue,
+  toDateInputValue,
+} from "@/lib/utils/dueDate";
+import { statusById, statusOptions } from "@/lib/utils/statuses";
 import {
   PRIORITY_LABELS,
   TASK_PRIORITIES,
   assigneeOf,
   type Task,
   type TaskInput,
-} from "./types";
+} from "@/types/task";
+import { memberList, type Workspace } from "@/types/workspace";
+
+import { LabelPicker } from "./LabelPicker";
+import { PriorityIcon } from "./PriorityIcon";
+import { PropertyChip, PropertyDateChip } from "./PropertyChip";
+import { StatusIcon } from "./StatusIcon";
 
 const PRIORITY_OPTIONS = TASK_PRIORITIES.map((value) => ({
   value,

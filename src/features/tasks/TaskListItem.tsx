@@ -5,12 +5,12 @@ import { memo } from "react";
 
 import { Avatar, Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import { formatDueDate, isOverdue } from "@/lib/utils/dueDate";
+import type { TaskStatus } from "@/lib/utils/statuses";
+import type { Assignee, Task } from "@/types/task";
 
-import { formatDueDate, isOverdue } from "./dueDate";
 import { PriorityIcon } from "./PriorityIcon";
 import { StatusIcon } from "./StatusIcon";
-import type { TaskStatus } from "./statuses";
-import type { Assignee, Task } from "./types";
 
 export const TaskListItem = memo(
   ({

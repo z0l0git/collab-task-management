@@ -2,13 +2,13 @@
 
 import { useMemo } from "react";
 
-import type { Workspace } from "@/features/workspaces/types";
+import { statusById, type TaskStatus } from "@/lib/utils/statuses";
+import { sortTasks, type TaskSort } from "@/lib/utils/taskFilters";
+import { assigneeOf, type Task } from "@/types/task";
+import type { Workspace } from "@/types/workspace";
 
-import { statusById, type TaskStatus } from "./statuses";
 import { StatusIcon } from "./StatusIcon";
-import { sortTasks, type TaskSort } from "./taskFilters";
 import { TaskListItem } from "./TaskListItem";
-import { assigneeOf, type Task } from "./types";
 
 export const TaskList = ({
   tasks,

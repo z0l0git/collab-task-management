@@ -4,12 +4,12 @@ import { Info } from "lucide-react";
 
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { isOwner } from "@/types/workspace";
 
 import { DeleteWorkspaceCard } from "./DeleteWorkspaceCard";
 import { LabelsPanel } from "./LabelsPanel";
 import { MembersPanel } from "./MembersPanel";
 import { StatusesPanel } from "./StatusesPanel";
-import { isOwner } from "./types";
 import { useCurrentWorkspace } from "./WorkspaceProvider";
 import { WorkspaceSettings } from "./WorkspaceSettings";
 

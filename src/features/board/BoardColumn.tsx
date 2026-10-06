@@ -7,11 +7,11 @@ import {
 } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
-import { statusById, type TaskStatus } from "@/features/tasks/statuses";
 import { StatusIcon } from "@/features/tasks/StatusIcon";
-import { assigneeOf, type Task } from "@/features/tasks/types";
-import type { Workspace } from "@/features/workspaces/types";
 import { cn } from "@/lib/utils";
+import { statusById, type TaskStatus } from "@/lib/utils/statuses";
+import { assigneeOf, type Task } from "@/types/task";
+import type { Workspace } from "@/types/workspace";
 
 import { BoardCard } from "./BoardCard";
 

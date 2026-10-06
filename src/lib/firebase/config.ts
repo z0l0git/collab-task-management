@@ -35,6 +35,9 @@ if (missingKeys.length > 0) {
 
 export const firebaseConfig: FirebaseOptions = rawConfig;
 
+export const attachmentsEnabled =
+  process.env.NEXT_PUBLIC_ATTACHMENTS_ENABLED !== "false";
+
 export const emulatorConfig = {
   enabled: process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true",
   host: process.env.NEXT_PUBLIC_FIREBASE_EMULATOR_HOST || "127.0.0.1",

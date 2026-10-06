@@ -13,9 +13,8 @@ import {
   Input,
 } from "@/components/ui";
 import { toUserMessage } from "@/lib/firebase";
-
-import { addLabel, removeLabel } from "./workspaceService";
-import type { Workspace } from "./types";
+import { addLabel, removeLabel } from "@/services/workspaceService";
+import type { Workspace } from "@/types/workspace";
 
 const MAX_LABELS = 50;
 const MAX_LABEL_LENGTH = 30;

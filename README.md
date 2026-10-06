@@ -104,13 +104,17 @@ src/
     layout/         App shell, navigation
     theme/          Pre-paint theme script and the dark mode toggle
   features/         One folder per domain: auth, workspaces, tasks, board,
-                    comments, attachments, dashboard — each with its own
-                    components, hooks, services and types
+                    comments, attachments, dashboard — its components and
+                    a hooks/ folder
+  services/         Firebase writes and one-off reads (taskService,
+                    workspaceService, ...); live listeners stay in hooks
   lib/
-    firebase/       SDK init, emulator wiring, error mapping
-    utils/          Shared helpers
+    firebase/       SDK init, emulator wiring, error mapping, and
+                    converters/ for typed Firestore reads
+    utils/          Pure helpers: class merging, board ordering, due dates,
+                    statuses, task filters
   hooks/            Cross-feature hooks
-  types/            Shared domain types
+  types/            Domain types and their constants (task, workspace, ...)
 tests/
   rules/            Firestore and Storage security rules tests
   e2e/              Playwright end-to-end tests
@@ -122,7 +126,7 @@ Three rules keep the layering honest:
 
 - Files in `app/` compose feature components and hold no business logic.
 - Components never touch Firebase directly — they use hooks, and hooks use
-  services in `features/*/services` or `lib/firebase`.
+  the services in `src/services/`.
 - Colours and radii come from the tokens in `src/app/globals.css`, never from
   raw palette classes, so light and dark mode stay in sync by construction.
 
@@ -186,17 +190,32 @@ Actions gates the merge.
 
 **Vercel environment variables.** The build deliberately throws when a
 `NEXT_PUBLIC_FIREBASE_*` variable is missing, so set all six — plus
-`NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false` — before the first deploy.
+`NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false` — before the first deploy. Set
+`NEXT_PUBLIC_ATTACHMENTS_ENABLED=false` if the project has no Storage bucket
+(see Known limitations).
 
 **Firebase setup for the deployed app.**
 
 1. Authentication → Sign-in method → enable **Email/Password** and **Google**.
 2. Authentication → Settings → **Authorized domains** → add the production
    domain. `localhost` is already there.
-3. Deploy the rules: `npx firebase deploy --only firestore:rules,storage:rules`.
+3. Deploy the rules and indexes:
+   `npx firebase deploy --only firestore:rules,firestore:indexes,storage`.
 
 `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` must be the real `<project>.firebaseapp.com`
 — `signInWithPopup` serves its OAuth handler from that domain.
+
+## Known limitations
+
+- **File attachments are off on the live demo.** Firebase now creates
+  Storage buckets only on the paid Blaze plan, and the demo project is on
+  the free Spark plan. The attachment code, the Storage rules and their
+  rules tests are complete, and they work against the emulators
+  (`npm run emulators`, then `npm run dev`). To turn them on for a
+  deployment: enable Storage in the Firebase console, put the bucket name
+  in `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`, run
+  `npx firebase deploy --only storage`, and set
+  `NEXT_PUBLIC_ATTACHMENTS_ENABLED=true` (or remove it).
 
 ## Roadmap
 

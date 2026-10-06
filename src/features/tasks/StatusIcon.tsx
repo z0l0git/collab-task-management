@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-
-import { STATUS_TEXT, type TaskStatus } from "./statuses";
+import { STATUS_TEXT, type TaskStatus } from "@/lib/utils/statuses";
 
 export const StatusIcon = ({
   status,

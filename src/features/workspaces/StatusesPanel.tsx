@@ -14,18 +14,17 @@ import {
   Modal,
 } from "@/components/ui";
 import { PropertyChip } from "@/features/tasks/PropertyChip";
+import { StatusIcon } from "@/features/tasks/StatusIcon";
+import { toUserMessage } from "@/lib/firebase";
 import {
   newStatusId,
   STATUS_COLORS,
   STATUS_LIMITS,
   type StatusColor,
   type TaskStatus,
-} from "@/features/tasks/statuses";
-import { StatusIcon } from "@/features/tasks/StatusIcon";
-import { toUserMessage } from "@/lib/firebase";
-
-import type { Workspace } from "./types";
-import { updateStatuses } from "./workspaceService";
+} from "@/lib/utils/statuses";
+import { updateStatuses } from "@/services/workspaceService";
+import type { Workspace } from "@/types/workspace";
 
 const COLOR_OPTIONS = STATUS_COLORS.map((value) => ({
   value,

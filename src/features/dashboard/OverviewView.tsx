@@ -14,16 +14,16 @@ import { useCallback, useMemo, type ReactNode } from "react";
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { EmptyState } from "@/components/ui";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { STATUS_BG, statusById } from "@/features/tasks/statuses";
 import { StatusIcon } from "@/features/tasks/StatusIcon";
-import { sortTasks } from "@/features/tasks/taskFilters";
 import { TaskListItem } from "@/features/tasks/TaskListItem";
-import { assigneeOf } from "@/features/tasks/types";
 import { useCurrentWorkspace } from "@/features/workspaces/WorkspaceProvider";
 import { cn } from "@/lib/utils";
+import { STATUS_BG, statusById } from "@/lib/utils/statuses";
+import { sortTasks } from "@/lib/utils/taskFilters";
+import { assigneeOf } from "@/types/task";
 
-import { useMyOpenTasks } from "./useMyOpenTasks";
-import { useTaskCounts } from "./useTaskCounts";
+import { useMyOpenTasks } from "./hooks/useMyOpenTasks";
+import { useTaskCounts } from "./hooks/useTaskCounts";
 
 const Tile = ({
   href,

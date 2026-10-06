@@ -6,9 +6,9 @@ import { createContext, useContext, type ReactNode } from "react";
 
 import { PanelBody, PanelHeader } from "@/components/layout/Panel";
 import { Button, EmptyState, Spinner } from "@/components/ui";
+import type { Workspace } from "@/types/workspace";
 
-import type { Workspace } from "./types";
-import { useWorkspace } from "./useWorkspaces";
+import { useWorkspace } from "./hooks/useWorkspaces";
 
 const WorkspaceContext = createContext<Workspace | null>(null);
 

@@ -5,8 +5,8 @@ import { useState } from "react";
 
 import { Menu, MenuDivider, MenuItem, MenuLabel } from "@/components/ui";
 import { CreateWorkspaceDialog } from "@/features/workspaces/CreateWorkspaceDialog";
-import type { Workspace } from "@/features/workspaces/types";
 import { WorkspaceTile } from "@/features/workspaces/WorkspaceTile";
+import type { Workspace } from "@/types/workspace";
 
 export const WorkspaceSwitcher = ({
   workspaces,
