@@ -1,41 +1,38 @@
-# Taskboard
+# Collab Taskboard
 
-A collaborative task management application: shared workspaces, a real-time
-Kanban board, task comments and file attachments, built with Next.js and
-Firebase.
+**Demo:** [https://collab-task-management.vercel.app](https://collab-task-management.vercel.app)
 
-> **Status:** authentication, workspaces and members, tasks with a real-time
-> Kanban board and list, comments, attachments, custom statuses, search,
-> filters, sort, pagination and a workspace dashboard are in place.
-> Hardening, tests and deployment come next; this README is completed then.
+## Features
 
-## Stack
+- Бүртгүүлэх, нэвтрэх (email эсвэл Google)
+- Workspace: owner, member эрх; owner гишүүн нэмж хасна
+- Task: төлөв, priority, хариуцагч, due date, label, тайлбар. Өөрчлөлт шууд
+  хадгалагдана
+- Kanban board (drag & drop), list view, өөрийн төлөвүүд (custom status)
+- Real-time: task, comment, гишүүнчлэл refresh хийлгүй шинэчлэгдэнэ
+- Comment, файл хавсралт (зургийн preview). Demo дээр хавсралт унтраалттай
+- Хайлт, шүүлтүүр, эрэмбэлэлт. URL-д хадгалагдана
+- Dashboard: төлөв бүрийн тоо, хугацаа хэтэрсэн, надад оноогдсон
+- Light/dark mode, гар утас, таблет, desktop
 
-| Concern       | Choice                                            |
-| ------------- | ------------------------------------------------- |
-| Framework     | Next.js 16 (App Router), React 19                 |
-| Language      | TypeScript, `strict` + `noUncheckedIndexedAccess` |
-| Styling       | Tailwind CSS v4, CSS-variable design tokens       |
-| Design system | Dark-first, four-step surface ladder, one accent  |
-| Backend       | Firebase Auth, Cloud Firestore, Cloud Storage     |
-| Local backend | Firebase Emulator Suite                           |
-| Icons         | lucide-react                                      |
-| Quality       | ESLint, Prettier, GitHub Actions                  |
+## Used Technology
 
-## Getting started
+Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 ·
+Firebase Auth, Firestore, Storage · dnd-kit · lucide-react ·
+Vitest + Testing Library · Firebase Emulator Suite · GitHub Actions · Vercel
 
-Requirements: Node.js 22+, npm, and a Java runtime (the Firestore and Storage
-emulators run on the JVM).
+## Get Started
+
+Node.js 22+ болон Java (emulator-т хэрэгтэй) суусан байх ёстой.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/z0l0git/collab-task-management.git
 cd collab-task-management
 npm install
 cp .env.example .env.local
 ```
 
-For local development you do not need a real Firebase project. Set the
-emulator values in `.env.local`:
+`.env.local`-д дараах утгуудыг оруулна. Жинхэнэ Firebase project хэрэггүй:
 
 ```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=demo-api-key
@@ -47,178 +44,136 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:000000000000:web:0000000000000000000000
 NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
 ```
 
-A project id starting with `demo-` is never contacted over the network, so the
-emulators run entirely offline with placeholder credentials.
-
-Then, in two terminals:
-
 ```bash
-npm run emulators   # Auth :9099, Firestore :8080, Storage :9199, UI :4000
-npm run dev         # http://localhost:3000
+npm run dev:local   # app :3000, emulator UI :4000
 ```
 
-### Running against a real Firebase project
+Emulator болон `next dev` нэг terminal дээр асна. Ctrl+C дарахад emulator-ын
+өгөгдөл `.emulator-data`-д хадгалагдана.
 
-1. Create a project in the [Firebase console](https://console.firebase.google.com),
-   add a **Web app**, and enable **Authentication** (Email/Password and Google),
-   **Cloud Firestore** and **Cloud Storage**.
-2. Copy the web app's SDK config into `.env.local` and set
-   `NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false`.
-3. Point the CLI at the project and deploy the rules:
+| Команд                       | Үйлдэл                       |
+| ---------------------------- | ---------------------------- |
+| `npm run dev:local`          | Emulator + dev server        |
+| `npm run dev`                | Зөвхөн dev server            |
+| `npm run emulators`          | Зөвхөн emulator              |
+| `npm run build`, `npm start` | Production build, ажиллуулах |
+| `npm test`                   | Unit, component тест         |
 
-   ```bash
-   npx firebase use --add
-   npx firebase deploy --only firestore:rules,storage:rules,firestore:indexes
-   ```
+## Environment variables
 
-The `NEXT_PUBLIC_FIREBASE_*` values are not secrets — the Firebase web SDK
-ships them to the browser by design. What protects the data is
-`firestore.rules` and `storage.rules`.
+Бүгд `.env.example`-д тайлбартай. Firebase-ийн 6 утгыг Firebase console →
+Project settings → Web app-аас авна. Эдгээр нь нууц биш, өгөгдлийг security
+rules хамгаална.
 
-## Scripts
+| Хувьсагч                                       | Утга                                          |
+| ---------------------------------------------- | --------------------------------------------- |
+| `NEXT_PUBLIC_FIREBASE_*` (6)                   | Firebase web config                           |
+| `NEXT_PUBLIC_USE_FIREBASE_EMULATORS`           | Local дээр `true`, production-д `false`       |
+| `NEXT_PUBLIC_ATTACHMENTS_ENABLED`              | `false` бол файл хавсралтыг нууна             |
+| `NEXT_PUBLIC_FIREBASE_EMULATOR_HOST`, `…_PORT` | Emulator хаяг, default нь `firebase.json`-оос |
 
-| Command                    | What it does                                          |
-| -------------------------- | ----------------------------------------------------- |
-| `npm run dev`              | Dev server at http://localhost:3000                   |
-| `npm run build`            | Production build                                      |
-| `npm start`                | Serve the production build                            |
-| `npm run lint`             | ESLint                                                |
-| `npm run lint:fix`         | ESLint with autofix                                   |
-| `npm run typecheck`        | Generate route types, then `tsc --noEmit`             |
-| `npm run format`           | Prettier write                                        |
-| `npm run format:check`     | Prettier check (runs in CI)                           |
-| `npm run test:rules`       | Security-rules checks (emulators must be running)     |
-| `npm test`                 | Unit tests (Vitest)                                   |
-| `npm run audit:contrast`   | WCAG contrast check of the colour tokens              |
-| `npm run emulators`        | Auth, Firestore and Storage emulators                 |
-| `npm run emulators:export` | Save current emulator data to `.emulator-data`        |
-| `npm run emulators:import` | Start emulators from `.emulator-data`, saving on exit |
+Firebase-ийн аль нэг утга дутуу бол build дээрээ алдаа заана.
 
-## Project structure
+## Folder Structure
 
 ```
 src/
-  app/              Routes only — layouts, pages, loading/error/not-found
-  components/
-    ui/             Design system (Button, Input, Modal, Card, Badge, ...)
-    layout/         App shell, navigation
-    theme/          Pre-paint theme script and the dark mode toggle
-  features/         One folder per domain: auth, workspaces, tasks, board,
-                    comments, attachments, dashboard — its components and
-                    a hooks/ folder
-  services/         Firebase writes and one-off reads (taskService,
-                    workspaceService, ...); live listeners stay in hooks
-  lib/
-    firebase/       SDK init, emulator wiring, error mapping, and
-                    converters/ for typed Firestore reads
-    utils/          Pure helpers: class merging, board ordering, due dates,
-                    statuses, task filters
-  hooks/            Cross-feature hooks
-  types/            Domain types and their constants (task, workspace, ...)
-tests/
-  rules/            Firestore and Storage security rules tests
-  e2e/              Playwright end-to-end tests
-firestore.rules     Firestore security rules
-storage.rules       Storage security rules
+  app/            route, layout, error / loading / not-found
+  components/     ui/ (Button, Modal, Menu…), layout/, theme/
+  features/       auth, workspaces, tasks, board, comments, attachments,
+                  dashboard: component + hooks/
+  services/       Firebase бичилт, уншилт
+  lib/firebase/   SDK, emulator, алдааны мессеж, converters/
+  lib/utils/      туслах функц: ordering, dueDate, statuses, taskFilters
+  hooks/          олон feature ашигладаг hook
+  types/          domain type
+tests/rules/      security rules тест
+firestore.rules, storage.rules, firestore.indexes.json
 ```
 
-Three rules keep the layering honest:
-
-- Files in `app/` compose feature components and hold no business logic.
-- Components never touch Firebase directly — they use hooks, and hooks use
-  the services in `src/services/`.
-- Colours and radii come from the tokens in `src/app/globals.css`, never from
-  raw palette classes, so light and dark mode stay in sync by construction.
-
-## Design system
-
-Dark-first. The page sits on a near-black canvas and hierarchy comes from a
-four-step surface ladder (`canvas` → `surface-1` → `surface-2` → …) plus 1px
-hairline borders — **nothing in the app casts a shadow except the modal**.
-A single lavender accent marks the primary action, the brand mark and the
-focus ring; it is never decorative. Priority and status get a small
-badge-only palette, always paired with a text label so colour is never the
-only signal.
-
-Every token pair is measured against WCAG AA. Where a value failed, it was
-changed rather than copied. `npm run audit:contrast` reads the tokens from
-`globals.css` and checks every text, icon and focus-ring pair in both themes.
+## Firestore data model
 
 ```
-bg-canvas  bg-surface-1..4   border-hairline[-strong|-tertiary]
-text-ink   text-ink-muted    text-ink-subtle   text-ink-tertiary
-bg-accent  text-accent-soft  bg-danger-solid
-text-body-sm (14px base)  text-body (prose)  text-headline  text-caption
-rounded-md (8px, controls)  rounded-lg (12px, cards)  rounded-full
+users/{uid}
+  id, displayName, email, emailLower, photoURL, createdAt, updatedAt
+
+workspaces/{workspaceId}
+  name, description, ownerId
+  memberIds: string[]
+  members: { [uid]: { role, displayName, email, photoURL } }
+  labels: string[]
+  statuses?: { [id]: { name, color, done, order } }
+  createdAt, updatedAt
+
+  tasks/{taskId}
+    title, description, status, priority, assigneeId, dueDate,
+    labels, order, createdBy, createdAt, updatedAt
+
+    comments/{commentId}
+      authorId, authorName, authorPhotoURL, message, createdAt
+
+    attachments/{attachmentId}
+      name, size, contentType, storagePath, uploadedBy, createdAt
+
+Storage: workspaces/{workspaceId}/tasks/{taskId}/{attachmentId}
 ```
 
-## Authentication
-
-Email/password and Google sign-in, via Firebase Auth. On every sign-in the app
-writes a `users/{uid}` profile document holding `displayName`, `email`,
-`emailLower` (for member lookup by email), `photoURL` and timestamps.
-
-Session persistence is the Firebase browser default (`indexedDBLocal`), so a
-signed-in user survives reloads and restarts without any extra code.
-
-Route protection is client-side: `AuthProvider` subscribes to
-`onAuthStateChanged`, the `(app)` layout redirects signed-out users to `/login`,
-and the `(auth)` layout redirects signed-in users to `/workspaces`. Both render
-a spinner while the session is still resolving, so neither flashes the wrong
-screen. **This guard is for UX only** — the real protection is the security
-rules, which refuse to serve the data regardless of what the UI renders.
+- `memberIds` нь query, rules-д; `members` нь нэр, зураг харуулахад.
+  Санаатай давхар хадгалсан
+- Task төлөвийн нэрийг биш id-г хадгална, тиймээс нэр солиход task
+  өөрчлөгдөхгүй. `statuses` байхгүй бол Todo / In progress / Done
+- Comment, attachment нь task-ийн subcollection, task нээхэд л ачаална
 
 ## Security
 
-Permissions are enforced in `firestore.rules` and `storage.rules`; the UI only
-checks permissions to decide what to show. Everything is denied by default, and
-each collection is opened up — with checks — as the feature that needs it lands.
+Эрхийг `firestore.rules`, `storage.rules` шалгана. UI зөвхөн юу харуулахаа
+шийднэ.
 
-`npm run test:rules` drives the running emulators over their REST APIs with real
-ID tokens and asserts the status codes, so the rules are verified rather than
-assumed. It needs no test runner and no extra dependencies:
+- Нэвтрээгүй хэрэглэгч үйлдэл хийх боломжгүй
+- Уригдсан гишүүд л Wоrkspace ийг харна
+- Owner: workspace засах, гишүүн, label, status удирдах, устгах. Member зөвхөн
+  өөрөө гарч болно
+- Task-ийг гишүүн бүр засаж болно, үүсгэсэн хүн эсвэл owner л устгана
+- Comment засагдахгүй, зөвхөн бичсэн хүн устгана
 
-```
-10 checks, 0 failing   # anonymous denied, member reads allowed,
-                       # cross-user writes denied, deletes denied
-```
+`npm run test:rules`: emulator дээр 90 шалгалт, CI дээр бас ажиллана.
 
-## Deployment
+## Гол шийдэлүүд
 
-`main` is the production branch. Vercel builds it on every merge, and GitHub
-Actions gates the merge.
+| Шийдэл                                                                | Яагаад                                                                                                            | Сул тал                                                              |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Dashboard-ийн тоог `count()` query-гээр авсан                         | Бүх task-ийг татахгүйгээр нийт тоог цөөхөн read-ээр гаргана                                                       | Шууд шинэчлэгддэггүй; хуудас нээх эсвэл tab руу буцахад шинэчлэгдэнэ |
+| Drag & drop-д dnd-kit ашигласан                                       | Утсан дээр хуруугаар чирж болно, accessibility сайн                                                               | Нэмэлт dependency                                                    |
+| Owner өөрийн төлөвүүдийг үүсгэнэ, аль нь "дууссан" гэдгийг тэмдэглэнэ | Төлөвийн нэр юыгаар ч өгж болох тул app "дууссан"-ыг нэрээр нь таньж чадахгүй. энэ тэмдгээр дууссан гэж харуулдаг | Rules төлөвийн тоог л шалгана, доторх утгыг шалгаж чадахгүй          |
+| Task-ийн утга автоматаар хадгалагдана, шинэ task form-оор үүснэ       | Нэг утга засахад Save дарах шаардлагагүй; Create дарах хүртэл task үүсэхгүй                                       | Өөрчлөлт бүр тусдаа write болно                                      |
+| Гишүүнийг email-ээр нэмнэ (бүртгэлтэй хэрэглэгч)                      | Урилгын систем хийх шаардлагагүй, энгийн                                                                          | Нэмэгдэх хүн эхлээд бүртгүүлсэн байх ёстой                           |
+| Route-ийг client талд хамгаална                                       | Firebase client SDK-тай хамгийн энгийн; өгөгдлийг rules хамгаална                                                 | Анх ороход богино хугацаанд loading харагдана                        |
 
-**Vercel environment variables.** The build deliberately throws when a
-`NEXT_PUBLIC_FIREBASE_*` variable is missing, so set all six — plus
-`NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false` — before the first deploy. Set
-`NEXT_PUBLIC_ATTACHMENTS_ENABLED=false` if the project has no Storage bucket
-(see Known limitations).
+## Design
 
-**Firebase setup for the deployed app.**
+[Linear](https://linear.app)-аас санаа авсан. Light, dark
+mode. Өнгө, хэмжээ бүгд `globals.css`-д нэг дор.
 
-1. Authentication → Sign-in method → enable **Email/Password** and **Google**.
-2. Authentication → Settings → **Authorized domains** → add the production
-   domain. `localhost` is already there.
-3. Deploy the rules and indexes:
-   `npx firebase deploy --only firestore:rules,firestore:indexes,storage`.
+## Test and CI
 
-`NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` must be the real `<project>.firebaseapp.com`
-— `signInWithPopup` serves its OAuth handler from that domain.
+- `npm test`: filter, sort, ordering, converter, validation, гол component-ууд
+  (45 тест)
+- `npm run test:rules`: 90 шалгалт
+- GitHub Actions push бүр дээр format, lint, typecheck, test, build, rules
+  ажиллуулсан.
 
-## Known limitations
+## Limitation
 
-- **File attachments are off on the live demo.** Firebase now creates
-  Storage buckets only on the paid Blaze plan, and the demo project is on
-  the free Spark plan. The attachment code, the Storage rules and their
-  rules tests are complete, and they work against the emulators
-  (`npm run emulators`, then `npm run dev`). To turn them on for a
-  deployment: enable Storage in the Firebase console, put the bucket name
-  in `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`, run
-  `npx firebase deploy --only storage`, and set
-  `NEXT_PUBLIC_ATTACHMENTS_ENABLED=true` (or remove it).
+- **Demo дээр файл хавсралт ажиллахгүй.** Шинэ Storage bucket үүсгэхэд Blaze (төлбөртэй) plan шаардлагатай болсон тул үүнийг хийх боломжгүй байсан.
+- **Workspace устгахад task-ууд нь үлдэнэ.** Firestore subcollection-ийг
+  автоматаар устгадаггүй. Rules-ийн улмаас хэн ч уншиж чадахгүй ч өгөгдөл
+  үлдэнэ.
 
-## Roadmap
+## Үргэлжлүүлж хийхээр бол
 
-Authentication → workspaces and roles → task CRUD with real-time sync →
-drag-and-drop Kanban board → comments and attachments → search, filter, sort
-and dashboard → hardening, tests and deployment.
+- Cloud Functions: workspace устгахад цэвэрлэх, зургийн thumbnail
+- Activity history, notification
+- Playwright E2E тест
+- Бүртгэлгүй хүнд урилга илгээх
+- Том workspace-д server-side хайлт (Algolia)
+- Offline дэмжлэг

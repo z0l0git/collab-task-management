@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "firebase emulators:exec --project demo-collab-task --only auth,firestore,storage --ui $([ -d ./.emulator-data ] && echo --import ./.emulator-data) --export-on-exit ./.emulator-data \"next dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
