@@ -30,7 +30,7 @@ const PRIORITY_OPTIONS = TASK_PRIORITIES.map((value) => ({
 }));
 
 const borderless =
-  "field-sizing-content w-full resize-none bg-transparent outline-none placeholder:text-ink-tertiary";
+  "field-sizing-content focus-visible:ring-accent-focus w-full resize-none rounded-sm bg-transparent outline-none placeholder:text-ink-subtle focus-visible:ring-1 focus-visible:ring-offset-4 focus-visible:ring-offset-surface-2";
 
 export const TaskCreateDialog = ({
   workspace,

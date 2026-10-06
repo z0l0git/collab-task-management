@@ -19,7 +19,7 @@
   --ink: #0d0e10;
   --ink-muted: #35363a;
   --ink-subtle: #686d73;
-  --ink-tertiary: #8d9299;
+  --ink-tertiary: #858a91;
 
   --accent: #5058c4;
   --accent-fill-hover: #434aad;
@@ -29,7 +29,7 @@
 
   --accent-soft: #5058c4;
   --accent-soft-hover: #434aad;
-  --focus-ring: rgb(94 106 210 / 0.5);
+  --focus-ring: #5e6ad2;
 
   --success: #187633;
   --warning: #8b5d00;
@@ -85,7 +85,7 @@
 
   --accent-soft: #7882d9;
   --accent-soft-hover: #828fff;
-  --focus-ring: rgb(94 105 209 / 0.5);
+  --focus-ring: #5e69d1;
 
   --success: #27a644;
   --warning: #d9a441;

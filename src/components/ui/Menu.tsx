@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 const MenuContext = createContext<() => void>(() => undefined);
 
 const itemClasses =
-  "text-eyebrow text-ink-muted hover:bg-surface-4 hover:text-ink focus-visible:bg-surface-4 focus-visible:text-ink flex h-8 w-full items-center gap-2 rounded-sm px-2 text-left font-medium outline-none";
+  "text-eyebrow text-ink-muted hover:bg-ink/8 hover:text-ink focus-visible:bg-ink/8 focus-visible:text-ink flex h-8 w-full items-center gap-2 rounded-sm px-2 text-left font-medium outline-none";
 
 export type MenuProps = {
   label: string;
@@ -49,9 +49,9 @@ export const Menu = ({
         [],
     );
 
-  const close = (restoreFocus = true) => {
+  const close = () => {
     setOpen(false);
-    if (restoreFocus) triggerRef.current?.focus();
+    triggerRef.current?.focus();
   };
 
   useEffect(() => {
@@ -115,9 +115,7 @@ export const Menu = ({
             align === "start" ? "left-0" : "right-0",
           )}
         >
-          <MenuContext.Provider value={() => close(false)}>
-            {children}
-          </MenuContext.Provider>
+          <MenuContext.Provider value={close}>{children}</MenuContext.Provider>
         </div>
       ) : null}
     </div>
